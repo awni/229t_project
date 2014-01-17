@@ -1,5 +1,13 @@
 Dependencies are
 
+#### Data
+
+For MNIST run
+
+```
+./setup.sh
+```
+
 #### 1. Cudamat
 
 ```
