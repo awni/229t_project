@@ -2,6 +2,9 @@ import sgd
 import nnet
 import dataLoader as dl
 import numpy as np
+import gnumpy as gp
+
+gp.board_id_to_use = 1
 
 def run():
     print "Loading data..."
@@ -11,7 +14,7 @@ def run():
     imDim = trainImages.shape[0]
     inputDim = imDim**2
     outputDim = 10
-    layerSizes = [1024]*2
+    layerSizes = [128,32]
 
     trainImages = trainImages.reshape(inputDim,-1)
 

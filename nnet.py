@@ -45,6 +45,11 @@ class NNet:
         self.mbSize = mbSize
 
     def initParams(self):
+        # crude way of random initialization (random seed) for parameters
+        import time
+        self.seed = int(time.time()) % 100000;
+        for tt in range(self.seed): gp.rand()
+        
         sizes = [self.inputDim]+self.layerSizes+[self.outputDim]
         scales = [gp.sqrt(6)/gp.sqrt(n+m) for n,m in zip(sizes[:-1],sizes[1:])]
         self.stack = [[gp.rand(m,n)*2*s-s,gp.zeros((m,1))] \
@@ -120,6 +125,9 @@ class NNet:
         if (grad != None):
             vecgrad = self.vectorize(grad)
         return cost,vecgrad
+
+    def getSeed(self):
+        return self.seed
 
 if __name__=='__main__':
     inputDim = 5

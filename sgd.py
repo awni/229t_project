@@ -33,6 +33,9 @@ class SGD:
         # randomly select minibatch
         perm = np.random.permutation(range(m))
 
+        # traces for cost, param and grad
+        costt = []; paramt = []; gradt=[]
+
         for i in xrange(0,m-self.minibatch+1,self.minibatch):
             self.it += 1
 
@@ -57,4 +60,16 @@ class SGD:
 
             if self.it%10 == 0:
                 print "Cost on iteration %d is %f."%(self.it,cost)
+                costt.append(cost)
+                gradt.append(self.model.vectorize(grad))
+                paramt.append(self.model.paramVec())
+
+                if self.it % 100 == 0:
+                    import pickle
+                    trace = open('trace%d.pk'%(self.model.getSeed()),'w')
+                    pickle.dump(costt,trace)
+                    pickle.dump(gradt,trace)
+                    pickle.dump(paramt,trace)
+                    print 'Trace dumped at iteration %d' % (self.it)
+
             
