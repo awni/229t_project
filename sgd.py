@@ -1,6 +1,7 @@
 
 import numpy as np
 import gnumpy as gp
+import pickle
 # gp.board_id_to_use = 1
 
 class SGD:
@@ -18,6 +19,17 @@ class SGD:
         self.velocity = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
                          for w,b in self.model.stack]
 
+        # traces for cost, param and grad
+        self.costt = []; self.paramt = []; self.gradt=[]
+        # try loading previous epochs
+        import os
+        if os.path.isfile('trace%d.pk'%(self.model.getSeed())):
+            trace = open('trace%d.pk'%(self.model.getSeed()))
+            pickle.load(self.costt,trace)
+            pickle.load(self.gradt,trace)
+            pickle.load(self.paramt,trace)
+            trace.close();
+
     def run(self,data,labels=None):
         """
         Runs stochastic gradient descent with model as objective.  Expects
@@ -32,9 +44,6 @@ class SGD:
 
         # randomly select minibatch
         perm = np.random.permutation(range(m))
-
-        # traces for cost, param and grad
-        costt = []; paramt = []; gradt=[]
 
         for i in xrange(0,m-self.minibatch+1,self.minibatch):
             self.it += 1
@@ -60,16 +69,16 @@ class SGD:
 
             if self.it%10 == 0:
                 print "Cost on iteration %d is %f."%(self.it,cost)
-                costt.append(cost)
-                gradt.append(self.model.vectorize(grad))
-                paramt.append(self.model.paramVec())
+                self.costt.append(cost)
+                self.gradt.append(self.model.vectorize(grad))
+                self.paramt.append(self.model.paramVec())
 
                 if self.it % 100 == 0:
-                    import pickle
                     trace = open('trace%d.pk'%(self.model.getSeed()),'w')
-                    pickle.dump(costt,trace)
-                    pickle.dump(gradt,trace)
-                    pickle.dump(paramt,trace)
+                    pickle.dump(self.costt,trace)
+                    pickle.dump(self.gradt,trace)
+                    pickle.dump(self.paramt,trace)
+                    trace.close();
                     print 'Trace dumped at iteration %d' % (self.it)
 
             

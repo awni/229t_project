@@ -28,8 +28,8 @@ def run():
     SGD = sgd.SGD(nn,alpha=stepSize,minibatch=minibatch)
 
     for e in range(epochs):
-	print "Running epoch %d"%e
-	SGD.run(trainImages,trainLabels)
+    	print "Running epoch %d"%e
+    	SGD.run(trainImages,trainLabels)
 
 
 if __name__=='__main__':
