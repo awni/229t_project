@@ -1,5 +1,6 @@
 grad = load('grad.txt');
 grad=bsxfun(@minus,grad, mean(grad));
+[u,s,v]=svds(grad,2);
 cost = load('cost.txt');
 param = load('param.txt');
 t = cost';
