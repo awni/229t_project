@@ -48,7 +48,7 @@ class NNet:
         # crude way of random initialization (random seed) for parameters
         import time
         self.seed = int(time.time()) % 100000;
-        # for tt in range(self.seed): gp.rand()
+        #for tt in range(self.seed): gp.rand()
         
         sizes = [self.inputDim]+self.layerSizes+[self.outputDim]
         scales = [gp.sqrt(6)/gp.sqrt(n+m) for n,m in zip(sizes[:-1],sizes[1:])]
@@ -60,7 +60,7 @@ class NNet:
             self.deltas = [gp.empty((s,self.mbSize)) for s in sizes[1:]]
             self.grad = [[gp.empty(w.shape),gp.empty(b.shape)] for w,b in self.stack]
             for tt in range(self.seed): gp.rand()
-
+ 
     def costAndGrad(self,data,labels):
         
         # forward prop
@@ -98,13 +98,13 @@ class NNet:
             self.grad[i][1] = (1./self.mbSize)*gp.sum(self.deltas[i],axis=1).reshape(-1,1)
 
             # add gaussian noise
-            self.grad[i][0] += .01 * gp.randn(self.grad[i][0].shape)
-            self.grad[i][1] += .01 * gp.randn(self.grad[i][1].shape)
+            # self.grad[i][0] += .01 * gp.randn(self.grad[i][0].shape)
+            # self.grad[i][1] += .01 * gp.randn(self.grad[i][1].shape)
 
         return cost,self.grad
 
     def updateParams(self,scale,update):
-        self.stack = [[ws[0]+scale*wsDelta[0],ws[1]+scale*wsDelta[1]] 
+        self.stack = [[ws[0]+scale*wsDelta[0]+.01 * gp.randn(ws[0].shape),ws[1]+scale*wsDelta[1]+.01 * gp.randn(ws[1].shape)] 
                         for ws,wsDelta in zip(self.stack,update)]
 
     def vecToStack(self,vec):

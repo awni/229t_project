@@ -14,12 +14,12 @@ def run():
     imDim = trainImages.shape[0]
     inputDim = imDim**2
     outputDim = 10
-    layerSizes = [128,32]
+    layerSizes = [16]
 
     trainImages = trainImages.reshape(inputDim,-1)
 
     minibatch = 256
-    epochs = 3
+    epochs = 6
     stepSize = 1e-2
 
     nn = nnet.NNet(inputDim,outputDim,layerSizes,minibatch)

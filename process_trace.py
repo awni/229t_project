@@ -20,7 +20,7 @@ for f in tracefiles:
 
 	# write cost
 	c = pickle.load(tf)
-	if (len(c) < 70): continue
+	if (len(c) < 140): continue
 	for v in c: costfile.write('%f ' % (v))
 	costfile.write('\n')
 
