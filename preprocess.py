@@ -39,9 +39,9 @@ class Preprocess:
         if numComponents == -1:
             numComponents = self.U.shape[0]
 
-        W = np.diag(np.sqrt(1/(self.V+self.epsilon))).dot(self.U.T)
+        W = np.dot(np.diag(np.sqrt(1/(self.V+self.epsilon))),self.U.T)
         W = W[:numComponents,:]
-        return W.dot(data-self.meanPatch)
+        return np.dot(W,data-self.meanPatch)
 
     def unwhiten(self,data):
         """
@@ -49,7 +49,7 @@ class Preprocess:
         """
         numComponents = data.shape[0]
         
-        W = self.U.dot(np.diag(np.sqrt(self.V+self.epsilon)))
+        W = np.dot(self.U,(np.diag(np.sqrt(self.V+self.epsilon))))
 
         W = W[:,:numComponents]
         

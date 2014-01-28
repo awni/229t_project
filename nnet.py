@@ -30,7 +30,8 @@ def sigmoid(x, computeGrad = False):
 
 class NNet:
 
-    def __init__(self,inputDim,outputDim,layerSizes,mbSize=256,train=True,activation='relu'):
+    def __init__(self,inputDim,outputDim,layerSizes,mbSize=256,train=True,
+		 activation='relu'):
         self.outputDim = outputDim
         self.inputDim = inputDim
         self.layerSizes = layerSizes
@@ -45,11 +46,9 @@ class NNet:
         self.mbSize = mbSize
 
     def initParams(self):
-        # crude way of random initialization (random seed) for parameters
-        import time
-        self.seed = int(time.time()) % 100000;
-        # for tt in range(self.seed): gp.rand()
-        
+	"""
+	Initialize parameters using 6/sqrt(fanin+fanout)
+	"""
         sizes = [self.inputDim]+self.layerSizes+[self.outputDim]
         scales = [gp.sqrt(6)/gp.sqrt(n+m) for n,m in zip(sizes[:-1],sizes[1:])]
         self.stack = [[gp.rand(m,n)*2*s-s,gp.zeros((m,1))] \
@@ -59,7 +58,6 @@ class NNet:
         if self.train:
             self.deltas = [gp.empty((s,self.mbSize)) for s in sizes[1:]]
             self.grad = [[gp.empty(w.shape),gp.empty(b.shape)] for w,b in self.stack]
-            for tt in range(self.seed): gp.rand()
 
     def costAndGrad(self,data,labels):
         
@@ -96,11 +94,6 @@ class NNet:
         for i in range(len(self.grad)):
             self.grad[i][0] = (1./self.mbSize)*self.deltas[i].dot(self.hActs[i].T)
             self.grad[i][1] = (1./self.mbSize)*gp.sum(self.deltas[i],axis=1).reshape(-1,1)
-
-            # add gaussian noise
-            self.grad[i][0] += .01 * gp.randn(self.grad[i][0].shape)
-            self.grad[i][1] += .01 * gp.randn(self.grad[i][1].shape)
-
         return cost,self.grad
 
     def updateParams(self,scale,update):
@@ -130,9 +123,6 @@ class NNet:
         if (grad != None):
             vecgrad = self.vectorize(grad)
         return cost,vecgrad
-
-    def getSeed(self):
-        return self.seed
 
 if __name__=='__main__':
     inputDim = 5
