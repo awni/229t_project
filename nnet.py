@@ -60,6 +60,9 @@ class NNet:
             self.deltas = [gp.empty((s,self.mbSize)) for s in sizes[1:]]
             self.grad = [[gp.empty(w.shape),gp.empty(b.shape)] for w,b in self.stack]
             for tt in range(self.seed): gp.rand()
+
+            self.stack = [[ws[0]+.01 * gp.randn(ws[0].shape),ws[1]+.01 * gp.randn(ws[1].shape)] 
+                        for ws in self.stack]
  
     def costAndGrad(self,data,labels):
         
@@ -75,6 +78,7 @@ class NNet:
         probs = self.hActs[-1]-gp.max(self.hActs[-1],axis=0)
         probs = gp.exp(probs)
         probs = probs/gp.sum(probs,axis=0)
+        probs += (probs < 1e-8)*(1e-8-probs)
 
         labelMat = np.zeros(probs.shape)
         labelMat[labels,range(self.mbSize)] = 1
@@ -104,7 +108,7 @@ class NNet:
         return cost,self.grad
 
     def updateParams(self,scale,update):
-        self.stack = [[ws[0]+scale*wsDelta[0]+.01 * gp.randn(ws[0].shape),ws[1]+scale*wsDelta[1]+.01 * gp.randn(ws[1].shape)] 
+        self.stack = [[ws[0]+scale*wsDelta[0],ws[1]+scale*wsDelta[1]] 
                         for ws,wsDelta in zip(self.stack,update)]
 
     def vecToStack(self,vec):

@@ -3,6 +3,7 @@ import nnet
 import dataLoader as dl
 import numpy as np
 import gnumpy as gp
+import preprocess as pc
 
 gp.board_id_to_use = 1
 
@@ -12,14 +13,18 @@ def run():
     trainImages,trainLabels=dl.load_mnist_train()
 
     imDim = trainImages.shape[0]
-    inputDim = imDim**2
+    inputDim = 50
     outputDim = 10
     layerSizes = [16]
 
-    trainImages = trainImages.reshape(inputDim,-1)
+    trainImages = trainImages.reshape(imDim**2,-1)
 
-    minibatch = 256
-    epochs = 6
+    pcer = pc.Preprocess()
+    pcer.computePCA(trainImages)
+    whitenedTrain = pcer.whiten(trainImages, inputDim)
+
+    minibatch = 512
+    epochs = 96
     stepSize = 1e-2
 
     nn = nnet.NNet(inputDim,outputDim,layerSizes,minibatch)
@@ -29,7 +34,7 @@ def run():
 
     for e in range(epochs):
     	print "Running epoch %d"%e
-    	SGD.run(trainImages,trainLabels)
+    	SGD.run(whitenedTrain,trainLabels)
 
 
 if __name__=='__main__':

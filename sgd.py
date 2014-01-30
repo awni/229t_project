@@ -39,7 +39,7 @@ class SGD:
         m = data.shape[1]
         
         # momentum setup
-        momIncrease = 500
+        momIncrease = 20
         mom = 0.5
 
         # randomly select minibatch
@@ -61,11 +61,11 @@ class SGD:
                 mom = self.momentum
 
             # update velocity
-            self.velocity = [[mom*vs[0]+self.alpha*g[0],mom*vs[1]+self.alpha*g[1]]
+            self.velocity = [[mom*vs[0]+g[0],mom*vs[1]+g[1]]
                              for vs,g in zip(self.velocity,grad)]
 
             # update params
-            self.model.updateParams(-1.0,self.velocity)
+            self.model.updateParams(-1.0*self.alpha,self.velocity)
 
             if self.it%10 == 0:
                 print "Cost on iteration %d is %f."%(self.it,cost)
@@ -80,5 +80,10 @@ class SGD:
                     pickle.dump(self.paramt,trace)
                     trace.close();
                     print 'Trace dumped at iteration %d' % (self.it)
+
+            if self.it % 2000 == 0:
+                if self.alpha > 1e-4:
+                    self.alpha = .5 * self.alpha
+                    print 'Learning rate shrinked to ', self.alpha
 
             
