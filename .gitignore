@@ -41,3 +41,11 @@ MNIST
 cost.txt
 grad.txt
 param.txt
+writing/abstract/abstract.aux
+writing/abstract/abstract.bbl
+writing/abstract/abstract.blg
+writing/abstract/abstract.fdb_latexmk
+writing/abstract/abstract.fls
+writing/abstract/abstract.log
+writing/abstract/abstract.pdf
+writing/abstract/abstract.synctex.gz
