@@ -1,0 +1,108 @@
+\documentclass[12pt,english]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+
+% Some macros for your convenience
+\newcommand\bbR{\ensuremath{\mathbb{R}}} % Real numbers
+\newcommand\bbZ{\ensuremath{\mathbb{Z}}} % Integers
+\newcommand\bbE{\ensuremath{\mathbb{E}}} % Expectation
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\DeclareMathOperator*{\var}{Var} % Variance
+\DeclareMathOperator*{\cov}{Cov} % Covariance
+\newcommand{\1}{\mathbb{I}} % Indicator 
+
+\title{
+CS229T/STATS231 Winter 2014 -- Project Abstract
+}
+
+\author{
+Awni Hannun \\
+\texttt{awni@stanford.edu}
+\and
+Peng Qi \\
+\texttt{xxx@stanford.edu}
+}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+
+\subsubsection*{Introduction}
+
+Multilayer functions have gained considerable traction over the past several
+years demonstrating state-of-the-art performance in many applications including
+speech recognition, object recognition in images and even language modeling.
+Correspondingly, much work has been done to improve methods for optimizing
+these functions which can be difficult due to the highly nonconvex landscape of
+the typical multilayer objective. Given growth in dataset sizes and that these
+highly expressive models tend to be used in the large data setting, stochastic
+optimization methods are common. However, stochastic methods tend to come with
+a host of hyperparameters and much tuning is involved to get these to work well
+which has lead to general disagreement as the supieriority of a particular
+algorithm. 
+
+The goal of our project is to perscribe the best stochastic optimizer to use
+for a general deep neural network perhaps accounting for modalities with
+varying statistical properties. We will attempt to do this in both an
+analytical sense, to the degree that this is possible and with an empirical
+evaluation. 
+
+\subsubsection*{Prior Work}\label{prior_work}
+
+Until recently stochastic gradient descent (SGD) with momentum has been the
+standard stochastic optimizer used with deep neural networks (DNNs)
+\cite{hinton_guide_tr}; however, other stochastic methods have been introduced
+and are beginning to be adopted including AdaGrad \cite{duchi_adagrad} and
+variations as well as the formulation of the nesterov accelerated gradient
+(NAG) as presented in \cite{sutskever_nag}. To the best of our knowledge, we do
+not know of any work which gives a thorough comparison of these algorithms and
+demonstrates when one or the other should be applied.  
+
+Furthermore, recent work has begun to attempt an analytical understanding of
+these types of heirarchichal models; however, often these results are on
+simplifications or modifications of a typical DNN which make them not
+applicable in practice. \cite{saxe_dl_dynamics} 
+
+\subsubsection*{Approach and Challenges}
+
+We seek to analyze deep networks and the settings in which certain stochastic
+methods may be more efficient. Ultimately we plan to perscribe a recipe for the
+correct algorithm or perhaps new variation of an existing algorithm to use. In
+order to do this we propose to analyze empirically several stochastic
+optimizers including SGD with momentum, NAG and AdaGrad with the hope of
+shedding light on the behaviour of a specific optimization procedure at
+training time. This empirical study will be setback by the fact that the
+hyperparameter selection for a specific algorithm can have a very large impact
+on the resulting convergence properties, thus we will need to be dilligent in
+our comparison. This will require much computation, so we intend to use a
+relatively small dataset(s) and model(s) along with optimized software and
+accelarted computation with GPUs.
+
+Furthermore, we wish to approach this problem from another angle by asking the
+question: given an idea of what the landscape of the objective looks like which
+algorithm is best to employ? One way we propose to gain insight about the
+landscape of a typical DNN objective is to keep a running trace of gradients
+during optimization and then project these gradient to a lower dimensional
+subspace which we can then visualize.  Using a simple method such as PCA to
+visualize the two primary modes of variation of our gradient trace could lose
+too much information and make too strong an assumption on the shape of the
+objective. We will likely need to explore advanced dimensionality reduction
+methods or resort to gaining insight about the objective via other methods than
+a visualization.
+
+Finally, and we recognize this as perhaps the most challenging component of our
+project, we wish to give some analytical results to verify our empirical
+observations or relate our observations to some existing analysis. Aattempting
+to come up with some kind of convergence guarantees for such a difficult to
+analyze objective will perhaps prove to be too ambitiouos; however, at the very
+least we plan to relate the different algorithms to one another via a
+mathematical reformulation in order to give better intuition of the trade-offs
+between them.
+
+\bibliography{refs}{}
+\bibliographystyle{plain}
+
+\end{document}
+
