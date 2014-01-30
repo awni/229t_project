@@ -31,17 +31,16 @@ Peng Qi \\
 
 \subsubsection*{Introduction}
 
-Multilayer neural networks and other deep models have gained considerable traction over the past several
-years demonstrating state-of-the-art performance in many applications including
-speech recognition, object recognition in images and even language modeling.
-Correspondingly, much work has been done to improve methods for optimizing
-these functions which can be difficult due to the highly nonconvex landscape of
-the typical multilayer objective. Given growth in dataset sizes and that these
-highly expressive models tend to be used in the large data setting, stochastic
-optimization methods are common. However, stochastic methods tend to come with
-a host of hyperparameters and much tuning is involved to get these to work well
-which has lead to general disagreement as the supieriority of a particular
-algorithm. 
+Multilayer neural networks and other deep models have gained considerable
+traction over the past several years demonstrating state-of-the-art performance
+in many applications. Correspondingly, much work has been done to improve
+methods for optimizing these functions which can be difficult due to the highly
+nonconvex landscape of the typical multilayer objective. Given growth in
+dataset sizes and that these highly expressive models tend to be used in the
+large data setting, stochastic optimization methods are common. However,
+stochastic methods tend to come with a host of hyperparameters and much tuning
+is involved to get these to work well which has lead to general disagreement as
+to the supieriority of a particular algorithm. 
 
 The goal of our project is to perscribe the best stochastic optimizer to use
 for a general deep neural network perhaps accounting for modalities with
@@ -77,9 +76,10 @@ correct algorithm or perhaps new variation of an existing algorithm to use. In
 order to do this we propose to analyze empirically several stochastic
 optimizers including SGD with momentum, NAG and AdaGrad with the hope of
 shedding light on the behaviour of a specific optimization procedure at
-training time. A foreseeable challenge is that the hyyperparameter selection for a specific algorithm can have a very large impact
-on the resulting convergence properties, thus we will need to be dilligent in
-our comparison and this may require much computation.
+training time. A foreseeable challenge is that the hyyperparameter selection
+for a specific algorithm can have a very large impact on the resulting
+convergence properties, thus we will need to be dilligent in our comparison and
+this may require much computation.
 
 Furthermore, we wish to approach this problem from a different angle by asking the
 question: given an idea of what the landscape of the objective looks like which
