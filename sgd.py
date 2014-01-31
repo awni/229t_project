@@ -67,6 +67,8 @@ class SGD:
             # update params
             self.model.updateParams(-1.0*self.alpha,self.velocity)
 
+            self.model.addrandn(10./(999+self.it))
+
             if self.it%10 == 0:
                 print "Cost on iteration %d is %f."%(self.it,cost)
                 self.costt.append(cost)

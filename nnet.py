@@ -111,6 +111,10 @@ class NNet:
         self.stack = [[ws[0]+scale*wsDelta[0],ws[1]+scale*wsDelta[1]] 
                         for ws,wsDelta in zip(self.stack,update)]
 
+    def addrandn(self, scale):
+        self.stack = [[ws[0]+scale*gp.randn(ws[0].shape),ws[1]+scale*gp.randn(ws[1].shape)] 
+                        for ws in self.stack]
+
     def vecToStack(self,vec):
         start = 0
         sizes = [self.inputDim]+self.layerSizes+[self.outputDim]
