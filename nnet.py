@@ -28,6 +28,22 @@ def sigmoid(x, computeGrad = False):
     g = x * (1.-x)
     return g
 
+def rect_sqrt(x, computeGrad = False):
+	if (not computeGrad):
+		f = gp.sqrt(gp.abs(x)* (x>0))
+		return f
+
+	g = 1 / (2*x + (x<=0))*(x>0)
+	return g
+
+def rect_log(x, computeGrad = False):
+	if (not computeGrad):
+		f = gp.log(x*(x>0)+1)* (x>0)
+		return f
+
+	g = (x>0) / (gp.exp(x))
+	return g
+
 class NNet:
 
     def __init__(self,inputDim,outputDim,layerSizes,mbSize=256,train=True,activation='relu'):
@@ -40,6 +56,8 @@ class NNet:
             "relu_hard" : relu_hard,
             "relu"      : relu,
             "sigmoid"   : sigmoid,
+            "sqrt"		: rect_sqrt,
+            "log"		: rect_log,
         }
         self.activation = self.funcdict[activation]
         self.mbSize = mbSize
