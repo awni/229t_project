@@ -20,10 +20,13 @@ def run(args=None):
     parser.add_option("--inputDim",dest="inputDim",type="int",default=100)
     parser.add_option("--optimizer",dest="optimizer",type="string",
 	    default="momentum")
+    parser.add_option("--momentum",dest="momentum",type="float",
+	    default=0.9)
     parser.add_option("--epochs",dest="epochs",type="int",default=50)
     parser.add_option("--step",dest="step",type="float",default=1e-2)
     parser.add_option("--outFile",dest="outFile",type="string",
 	    default="models/test.bin")
+    parser.add_option("--anneal",dest="anneal",type="float",default=1)
 
     (opts,args)=parser.parse_args(args)
     opts.layers = [int(l) for l in opts.layers.split(',')]
@@ -49,11 +52,12 @@ def run(args=None):
     nn.initParams()
 
     SGD = sgd.SGD(nn,alpha=opts.step,minibatch=opts.minibatch,
-	    optimizer=opts.optimizer)
+	    optimizer=opts.optimizer,momentum=opts.momentum)
 
     for e in range(opts.epochs):
     	print "Running epoch %d"%e
     	SGD.run(trainImages,trainLabels)
+	SGD.alpha = SGD.alpha/opts.anneal
 
     with open(opts.outFile,'w') as fid:
 	pickle.dump(opts,fid)
