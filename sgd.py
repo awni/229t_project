@@ -28,6 +28,12 @@ class SGD:
 	    print "Using adagrad.."
 	    self.gradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
 			      for w,b in self.model.stack]
+	elif self.optimizer == 'adaccel':
+	    print "Using adaccel.."
+	    self.gradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
+			      for w,b in self.model.stack]
+	    self.sqgradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
+			      for w,b in self.model.stack]
 	elif self.optimizer == 'sgd':
 	    print "Using sgd.."
 	else:
@@ -90,6 +96,19 @@ class SGD:
 				  for vs,g in zip(self.velocity,grad)]
 		update = self.velocity
 		scale = 1.0
+
+	    elif self.optimizer == 'adaccel':
+		# trace = trace+grad
+		self.gradt = [[gt[0]+g[0],gt[1]+g[1]] 
+			for gt,g in zip(self.gradt,grad)]
+		# sqtrace = sqtrace+grad.^2
+		self.sqgradt = [[gt[0]+g[0]*g[0],gt[1]+g[1]*g[1]] 
+			for gt,g in zip(self.sqgradt,grad)]
+
+		# update = grad.*trace.^(-1/2)
+		update =  [[g[0]*(1./gp.sqrt(sqgt[0]-gt[0])),g[1]*(1./gp.sqrt(sqgt[1]-gt[1]))]
+			for gt,sqgt,g in zip(self.gradt,self.sqgradt,grad)]
+		scale = -self.alpha
 
 	    elif self.optimizer == 'sgd':
 		update = grad
