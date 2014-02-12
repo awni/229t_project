@@ -1,0 +1,47 @@
+\documentclass[12pt,english]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+
+% Some macros for your convenience
+\newcommand\bbR{\ensuremath{\mathbb{R}}} % Real numbers
+\newcommand\bbZ{\ensuremath{\mathbb{Z}}} % Integers
+\newcommand\bbE{\ensuremath{\mathbb{E}}} % Expectation
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\DeclareMathOperator*{\var}{Var} % Variance
+\DeclareMathOperator*{\cov}{Cov} % Covariance
+\newcommand{\1}{\mathbb{I}} % Indicator 
+
+\title{
+{\large CS229T/STATS231 Winter 2014 -- Project Progress Report }
+}
+
+\author{ \large
+Awni Hannun \\
+\texttt{awni@stanford.edu}
+\and
+Peng Qi \\
+\texttt{pengqi@stanford.edu}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+We attempt to prescribe a stochastic optimization procedure for the typical
+multilayer neural network objective. We plan to do this by developing a deeper
+understanding of the most typical objective(s) and architecutres used in this
+setting. We apply this analysis to motivate the selection of optimization
+procedures we study and attempt to give a thorough comparison of a few
+competing algorithms using existing theory and empirical results. 
+
+\input{setup}
+\input{objective}
+\input{optimization}
+\input{plans}
+
+\bibliography{refs}{}
+\bibliographystyle{plain}
+
+\end{document}
+
