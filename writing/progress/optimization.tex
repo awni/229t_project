@@ -1,9 +1,66 @@
 \subsubsection*{Optimization}
--section on optmization
-    - implemented several objectives
-    - introduce notation for classic SGD, momentum, NAG, adagrad
-    - did grid search for each method to find optimal hyperparameters
-    - nesterov and adagrad are the best
-    - discussion on shortcomings of each
-    - attempt to combine the two
+
+Thus far we have far experimented with several optimizers, all of which are
+variations of the basic stochastic gradient descent (SGD) optimization
+procedure. Let $\ell(\theta)$ be the loss function of the network with
+parameters $\theta$. We use accelerated SGD methods that update the parameters
+at time $t$ according to
+\begin{align*}
+&v_{t+1} = \mu v_t - \eta \nabla \ell (\theta_t + \gamma v_t) \\
+&\theta_{t+1} = \theta_t + v_{t+1}
+\end{align*}
+where $\eta$ is the learning rate, and the parameter $\mu$, known as the momentum
+parameter dictates how much gradient history we take into account at every
+update. If we set $\mu = 0$ we recover plain SGD, and setting $\mu = 1$ uses
+the full gradient history at every update.  The $\gamma$ parameter is either
+active and set as $\gamma = \mu$ or inactive and set as $\gamma = 0$.  When
+$\gamma$ is inactive, we have typical SGD with ``momentum'', also known as
+classical momentum (CM). On the other hand, when $\gamma$ is active the
+procedure is known as Nesterov's accelerated graient (NAG).
+
+We also study the adaptive gradient algorithm (AdaGrad) with a diagonal
+preconditioning matrix $G$. The update can be written as
+\begin{align*}
+&G_{t+1} = G_{t} + \diag(\nabla \ell (\theta_t))^2 \\
+&\theta_{t+1} = \theta_t + G_{t+1}^{-1/2} \nabla \ell(\theta_t)
+\end{align*} 
+
+First we evaluate each of the four optimization procedures described above. We
+use a grid search to find the optimal hyperparameter settings for each
+optimizer, searching over learning rate, annealing factor (i.e. how much to
+decrease the learning rate over time) and momentum parameter where applicable.
+The training curves for the optimizer with hyperparameters set to achieve
+fastest convergence are plotted in Figure XXX in the appendix. Notice that the
+NAG and AdaGrad updaters far outstrip the others, although are neck and neck
+with each other especially later in training.
+
+The fact that the NAG and AdaGrad optimizers have such comparable convergence
+despite being quite different is somewhat surprising. As we have begun to show,
+neural network objectives are ill-conditioned, and we confirm common belief
+that they have long narrow ravines leading towards local optima surrounded with
+walls of high curvature. This fact motivates the use of momentum to remove the
+oscillating iterations that SGD suffers from. AdaGrad also works to this affect
+by penalizing directions which we travel in large magnitudes often and
+encouraging directions with small but consistent gradients. AdaGrad converges
+faster than momentum methods in the early stages of learning; however,
+eventually suffers from the problem of diminishing common directions of travel
+even if these directions are along the basin of the ravine. Thus in the long
+run to achieve convergence along a ravine we need a form of acceleration along
+directions of common travel which AdaGrad will not provide. 
+
+The above discussion motivates combining the best of both the AdaGrad and
+NAG optimizers to form an accelerated and adaptive gradient optimizer. We
+initially attempt to do this with a simple reformulation given by
+\begin{align*}
+&v_{t+1} = \mu v_t - \eta \nabla \ell (\theta_t + \gamma v_t) \\
+&G_{t+1} = G_{t} + \diag(\nabla \ell (\theta_t))^2 \\
+&\theta_{t+1} = \theta_t + G_{t+1}^{-1/2} v_{t+1}
+\end{align*}
+where we use the descent direction $v$ given by NAG and rescale this direction
+using the AdaGrad preconditioning matrix $G$. Results can be seen in Figure XXX
+in the appendix. The accelerated AdaGrad seems to converge slightly faster on
+the MNIST training data, in particular during the later stages of training.
+However, since both algorithms converge extremely fast on the small MNIST
+dataset, before making any claims we must rigorously test this method on harder
+problems.
 
