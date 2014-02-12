@@ -1,7 +1,7 @@
-
 import numpy as np
 import gnumpy as gp
 import pickle
+
 # gp.board_id_to_use = 1
 
 class SGD:
@@ -34,6 +34,13 @@ class SGD:
 			      for w,b in self.model.stack]
 	    self.sqgradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
 			      for w,b in self.model.stack]
+	elif self.optimizer == 'adaccel2':
+	    print "Using adaccel2.."
+	    self.gradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
+			      for w,b in self.model.stack]
+	    self.velocity = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
+			      for w,b in self.model.stack]
+
 	elif self.optimizer == 'sgd':
 	    print "Using sgd.."
 	else:
@@ -62,7 +69,7 @@ class SGD:
             mb_data = data[:,perm[i:i+self.minibatch]]
             mb_data = gp.garray(mb_data)
 
-	    if self.optimizer == 'nesterov':
+	    if self.optimizer == 'nesterov' or self.optimizer == 'adaccel2':
 		# w = w+mom*velocity (evaluate gradient at future point)
 		self.model.updateParams(mom,self.velocity)
                 
@@ -109,6 +116,19 @@ class SGD:
 		update =  [[g[0]*(1./gp.sqrt(sqgt[0]-gt[0])),g[1]*(1./gp.sqrt(sqgt[1]-gt[1]))]
 			for gt,sqgt,g in zip(self.gradt,self.sqgradt,grad)]
 		scale = -self.alpha
+
+	    elif self.optimizer == 'adaccel2':
+		# velocity = mom*velocity - alpha*grad
+		self.velocity = [[mom*vs[0]-self.alpha*g[0],mom*vs[1]-self.alpha*g[1]]
+				  for vs,g in zip(self.velocity,grad)]
+		# trace = trace+grad.^2
+		self.gradt = [[gt[0]+g[0]*g[0],gt[1]+g[1]*g[1]] 
+			for gt,g in zip(self.gradt,grad)]
+
+		# update = velocity.*trace.^(-1/2)
+		update =  [[v[0]*(1./gp.sqrt(gt[0])),v[1]*(1./gp.sqrt(gt[1]))]
+			for gt,v in zip(self.gradt,self.velocity)]
+		scale = 1.0
 
 	    elif self.optimizer == 'sgd':
 		update = grad

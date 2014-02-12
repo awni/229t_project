@@ -77,7 +77,7 @@ class NNet:
         labelMat = np.zeros(probs.shape)
         labelMat[labels,range(self.mbSize)] = 1
         labelMat = gp.garray(labelMat)
-        cost = -(1./self.mbSize)*gp.sum(labelMat*gp.log(probs))
+        cost = -(1./self.mbSize)*np.nansum(gp.as_numpy_array(labelMat*gp.log(probs)))
 
         if not self.train:
             return cost,None
