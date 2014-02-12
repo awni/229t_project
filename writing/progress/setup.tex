@@ -1,2 +1,15 @@
 \subsubsection*{Experimental Setup}
--briefly discuss experimental setup
+
+In most experiments performed we use a standard multilayer neural network with
+dense connections between each layer of hidden activations. The number of
+hidden layers varies and size of the network varies; for the MNIST experiments
+described below we use 2 hidden layers with 200 units each. The rectified
+linear nonlinearity ($f(x) = \max\{.1x,x\}$) is applied at each hidden unit. Most
+computation is accelerated using GPUs and the Gnumpy for python library. 
+
+We use the MNIST handwritten digits dataset which consists of 60,000 training
+images and 10,000 test images. The images are all $28\times28$ pixels; however, prior
+to training most networks, we project the data onto the 100 principal
+components with standard PCA and use this as the input. This is primarily done for
+computational efficiency, decreasing the total number of parameters in the
+network.
