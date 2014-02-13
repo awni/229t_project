@@ -36,14 +36,14 @@ with each other especially later in training.
 
 The fact that the NAG and AdaGrad optimizers have such comparable convergence
 despite being quite different is somewhat surprising. As we have begun to show,
-neural network objectives are ill-conditioned, and we confirm common belief
+neural network objectives are ill-conditioned, and for now we stick with the common belief
 that they have long narrow ravines leading towards local optima surrounded with
-walls of high curvature. This fact motivates the use of momentum to remove the
+walls of high curvature. This hypothesis motivates the use of momentum to remove the
 oscillating iterations that SGD suffers from. AdaGrad also works to this affect
 by penalizing directions which we travel in large magnitudes often and
 encouraging directions with small but consistent gradients. AdaGrad converges
 faster than momentum methods in the early stages of learning; however,
-eventually suffers from the problem of diminishing common directions of travel
+eventually it suffers from the problem of diminishing common directions of travel
 even if these directions are along the basin of the ravine. Thus in the long
 run, in order to achieve convergence along a ravine we need a form of
 acceleration along directions of common travel which AdaGrad will not provide. 

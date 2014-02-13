@@ -41,17 +41,21 @@ competing algorithms using existing theory and empirical results.
 In most experiments performed, we use a standard multilayer neural network with
 dense connections between each layer of hidden activations. The number of
 hidden layers and size of the networks vary; for the MNIST experiments
-described below we use 2 hidden layers with 200 units each. The rectified
-linear nonlinearity ($f(x) = \max\{.1x,x\}$) is applied at each hidden unit.
+described below we use 2 hidden layers with 200 units each. The leaky rectified
+linear nonlinearity ($f(x) = \max\{0.01x,x\}$) is applied at each hidden unit.
 Most computation is accelerated using GPUs and the Gnumpy library for Python. 
 
 We use the MNIST handwritten digits dataset which consists of 60,000 training
 images and 10,000 test images. The images are all $28\times28$ pixels; however,
-prior to training most networks we project the data onto the 100 principal
-components with standard PCA and use this as the input. This primarily achieves
+prior to training most networks we whiten the data onto the leading principal
+components with standard PCA and use this as the input.
+50 principal components were used for cost function visualization, and 100 
+for the rest of the experiments. This primarily achieves
 computational efficiency by decreasing the total number of parameters in the
-network. During optimization, networks are usually trained for 30 epochs
-(passes over the training data), and at each epoch we randomly permute the
+network. During optimization, networks are usually trained for 1000 iterations (updates) for
+ cost function visualization, and 30 epochs
+(passes over the training data) for evaluating optimization methods, and at each epoch we
+ randomly permute the
 order of the training examples.
 
 \input{objective}
@@ -81,14 +85,34 @@ procedures to convergence rates given in the literature.
 \newpage
 \subsubsection*{Appendix}
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
+{\centering
+\includegraphics[width=.23\textwidth]{../plots/results_.pdf} 
+\includegraphics[width=.23\textwidth]{../plots/results_16.pdf} 
+\includegraphics[width=.23\textwidth]{../plots/results_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_16_16_16_16_16.pdf}
+}
+\caption{Visualization of cost function landscapes for neural networks of hidden layer number 0, 1, 2, and 5} \label{fig:cost_layer}
+\end{figure}
+
+\begin{figure}[h!]
+{\centering
+\includegraphics[width=.23\textwidth]{../plots/results_16_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_[6000]_16_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_[600]_16_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_[120]_16_16_16.pdf}
+}
+\caption{Visualization of cost function landscapes for neural networks of 3 hidden layers, trained with minibatche sizes 60000, 6000, 600, and 120}\label{fig:cost_minibatch}
+\end{figure}
+
+\begin{figure}[h!]
     \centering
     \includegraphics{../plots/allcurves.pdf}
     \caption{\label{fig:allcurves} Plot of estimated objective on the training
 set over iterations of optimization.}
 \end{figure}
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
     \centering
     \includegraphics{../plots/bestcurves.pdf}
     \caption{\label{fig:bestcurves} Plot of estimated objective with scaled
