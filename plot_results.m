@@ -12,7 +12,6 @@ function plot_results(suffix)
     points_per_trial = 1000;
     
     h = figure;
-    title(['results' suffix]);
     
     %% PCA approach
 %     [u,s,v]=svds(cov(grad),2);
