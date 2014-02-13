@@ -23,8 +23,9 @@ def run():
     pcer.computePCA(trainImages)
     whitenedTrain = pcer.whiten(trainImages, inputDim)
 
-    minibatch = 512
-    epochs = 96
+    minibatch = whitenedTrain.shape[1]
+    print "minibatch size: %d" % (minibatch)
+    epochs = 1000
     stepSize = 1e-2
 
     nn = nnet.NNet(inputDim,outputDim,layerSizes,minibatch)
@@ -35,6 +36,8 @@ def run():
     for e in range(epochs):
     	print "Running epoch %d"%e
     	SGD.run(whitenedTrain,trainLabels)
+
+    SGD.dumptrace()
 
 
 if __name__=='__main__':

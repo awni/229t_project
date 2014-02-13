@@ -38,9 +38,8 @@ nosetests.xml
 # 229t specific
 MNIST
 *.pk
-cost.txt
-grad.txt
-param.txt
+*.txt
+*.fig
 writing/abstract/abstract.aux
 writing/abstract/abstract.bbl
 writing/abstract/abstract.blg

@@ -40,7 +40,7 @@ class SGD:
         
         # momentum setup
         momIncrease = 20
-        mom = 0.5
+        mom = 0
 
         # randomly select minibatch
         perm = np.random.permutation(range(m))
@@ -57,8 +57,8 @@ class SGD:
                 mb_labels = labels[perm[i:i+self.minibatch]]
                 cost,grad = self.model.costAndGrad(mb_data,mb_labels)
 
-            if self.it > momIncrease:
-                mom = self.momentum
+            # if self.it > momIncrease:
+            #     mom = self.momentum
 
             # update velocity
             self.velocity = [[mom*vs[0]+g[0],mom*vs[1]+g[1]]
@@ -69,23 +69,22 @@ class SGD:
 
             self.model.addrandn(10./(999+self.it))
 
-            if self.it%10 == 0:
-                print "Cost on iteration %d is %f."%(self.it,cost)
-                self.costt.append(cost)
-                self.gradt.append(self.model.vectorize(grad))
-                self.paramt.append(self.model.paramVec())
-
-                if self.it % 100 == 0:
-                    trace = open('trace%d.pk'%(self.model.getSeed()),'w')
-                    pickle.dump(self.costt,trace)
-                    pickle.dump(self.gradt,trace)
-                    pickle.dump(self.paramt,trace)
-                    trace.close();
-                    print 'Trace dumped at iteration %d' % (self.it)
+            print "Cost on iteration %d is %f."%(self.it,cost)
+            self.costt.append(cost)
+            self.gradt.append(self.model.vectorize(grad))
+            self.paramt.append(self.model.paramVec())
 
             if self.it % 2000 == 0:
                 if self.alpha > 1e-4:
                     self.alpha = .5 * self.alpha
                     print 'Learning rate shrinked to ', self.alpha
+
+    def dumptrace(self):
+        trace = open('trace%d.pk'%(self.model.getSeed()),'w')
+        pickle.dump(self.costt,trace)
+        pickle.dump(self.gradt,trace)
+        pickle.dump(self.paramt,trace)
+        trace.close();
+        print 'Trace dumped at iteration %d' % (self.it)
 
             

@@ -66,7 +66,7 @@ class NNet:
         # crude way of random initialization (random seed) for parameters
         import time
         self.seed = int(time.time()) % 100000;
-        #for tt in range(self.seed): gp.rand()
+        for tt in range(self.seed): gp.rand()
         
         sizes = [self.inputDim]+self.layerSizes+[self.outputDim]
         scales = [gp.sqrt(6)/gp.sqrt(n+m) for n,m in zip(sizes[:-1],sizes[1:])]
@@ -77,10 +77,10 @@ class NNet:
         if self.train:
             self.deltas = [gp.empty((s,self.mbSize)) for s in sizes[1:]]
             self.grad = [[gp.empty(w.shape),gp.empty(b.shape)] for w,b in self.stack]
-            for tt in range(self.seed): gp.rand()
+            # for tt in range(self.seed): gp.rand()
 
-            self.stack = [[ws[0]+.01 * gp.randn(ws[0].shape),ws[1]+.01 * gp.randn(ws[1].shape)] 
-                        for ws in self.stack]
+            # self.stack = [[ws[0]+.1 * gp.randn(ws[0].shape),ws[1]+.1 * gp.randn(ws[1].shape)] 
+            #             for ws in self.stack]
  
     def costAndGrad(self,data,labels):
         
