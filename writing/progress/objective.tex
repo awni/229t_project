@@ -45,3 +45,15 @@ essentially contradicts our purpose, and yields uninteresting results that we ch
 to show.}. However, despite our earlier success in visualization with small random 
 perturbations to the same initialization points, this does not appear to be the case 
 for general random initializations (See Figure \ref{fig:cost_layer} and \ref{fig:cost_minibatch}).
+
+Although the visualization does not convey much information beyond models with more
+than zero hidden layers (which is essentially softmax regression model, which has a
+convex cost function), but from Figure \ref{fig:cost_layer} we do get a rough sense 
+that the nolinearity of the cost function of neural networks grows as the number
+of hidden layer increases. We can see that the random initialization points (red end
+for each trace) are more concentrated under linear projection
+for the shallow models than for the deep ones. Another interesting phenomenon is that
+as the size of minibatch shrinks, the minibatch cost function landscape deviates further
+from the batch cost function (Figure \ref{fig:cost_minibatch}), and this might worth
+investigating in our further analyses as this might characterize the non-stationarity
+of neural network cost functions on minibatches.

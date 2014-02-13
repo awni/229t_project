@@ -67,16 +67,20 @@ Further plans for our project include:
 
 \begin{enumerate}
 
-\item Gain better understanding of the network objective(s) by using second
-order information.  For example for small $n$, we can estimate rank $n$
-approximations to the Hessian of the objective to better understand local
-curvature.
+\item Use alternative dimensionality reduction techniques for cost function
+landscape visualization, e.g. t-SNE.
 
-\item Evaluate the same empirical studies on a slightly harder to fit dataset.
+\item Evaluate the same empirical studies on a slightly harder to fit (``more realistic'') dataset.
 We plan to move to CIFAR-100 next.
 
 \item Compare the NAG, AdaGrad and other variations of the two optimization
 procedures to convergence rates given in the literature.
+
+\item Gain better understanding of the network objective(s) by using second
+order information.  For example for small $n$, we can estimate rank $n$
+approximations to the Hessian of the objective to better understand local
+curvature, and hopefully improve existing algorithms by utilizing
+such information.
 
 \item Give an evaluation and discussion on generalization performance.
 
