@@ -1,56 +1,44 @@
 \subsubsection*{Understanding the Objective}
 
-In order to gain insight into the objective function landscape of neural
-networks in terms of their parameters, we ran a set of experiments with neural
-network models that are comparatively smaller than those used in our
-optimization experiments.  Specifically, the networks we used have an input
-dimension of 50, an output dimension of 10 (determined by the classification
-task), and hidden layers with 16 units for each layer. We try to limit the
-model size in order to a) efficiently train the networks for repeated runs, and
-b) to save the trace of model parameters as well as gradients as the training
-progresses to visualize the cost function landscape.
+In order to gain insight about the objective function of neural networks, we
+ran a set of experiments with models that are comparably smaller than those
+used in our optimization experiments. Specifically, the networks have an input
+dimension of 50, an output dimension of 10, and hidden layers with 16 units
+each. We try to limit the model size in order to a) efficiently train the
+networks for repeated runs, and b) to save the trace of model parameters and
+gradients as the training progresses which are used to visualize the cost
+function.
 
-As we train these small networks with SGD, we vary the number of hidden layers
-from zero to five, as well as the minibatch size in $\{120,600,6000,60000\}$.
-While adding hidden layers is known to help increase the expressivity of the
-model, we attempt to investigate if more layers also makes the objective
-function of the network more poorly conditioned. Further we wish to know how
-good of an approximation to the objective function of the network we have as
-function of the minibatch size.
+In these experiments we vary the number of hidden layers from zero to five and
+the minibatch size in $\{120,600,6000,60000\}$.  While adding hidden layers is
+known to help increase the expressivity of the model, we attempt to investigate
+if more layers also makes the objective function of the network more poorly
+conditioned. Further we wish to know if decreasing the minibatch size degrades
+our approximation to the objective function at each iteration.
 
-For each model and minibatch setting, we run SGD for 1,000 iterations with a
-fixed learning rate of 0.1, saving at each iteration the parameters of the
-network, the objective and gradient evaluated for that minibatch. For each
-model/minibatch setting, we repeat the network training from 20 independent
-random initializations and plot these training traces with a technique
-introduced below on the same plot to visualize the landscape of cost function.
-For the largest model that we considered in this analysis (5 hidden layers of
-16 units each) our trace files will take tens of megabytes on disk, thus we are
-constrained to consider small modelsizes.
+We run SGD for 1,000 iterations with a fixed learning rate of 0.1, saving the
+objective, parameters and gradients at each iteration. For each model/minibatch
+setting, we repeat the network training for 20 independent random
+initializations and on the same plot compare these training traces with a
+technique introduced below. For the largest model we consider in this analysis
+(5 hidden layers of 16 units each) our trace files take tens of megabytes on
+disk, thus we are constrained to consider small modelsizes.
 
 With these traces, we visualize the cost functions by linear projections to a
 lower dimensional space. Specifically, we compute the principal components of
 the covariance matrix of the gradient traces across the 20 trials for each
 setting, and project the model parameters into the subspace of the leading
-principle values. The logic behind this is that we want to characterize the
+components. The logic behind this is to characterize the
 landscape of the cost function in the direction where the model parameters
-(despite initialization) travel the most \footnote{An tempting alternative
-would be to project the parameters into the space of the principal components
-of the parameter's covariance, but this essentially contradicts our purpose,
-and yields uninteresting results that we choose not to show.}. However, despite
-our earlier success in visualization with small random perturbations to the
-same initialization points, this does not appear to be the case for general
-random initializations (See Figure \ref{fig:cost_layer} and
-\ref{fig:cost_minibatch}).
+(despite initialization) travel the most. 
 
-Although the visualization does not convey much information beyond models with more
-than zero hidden layers (which is essentially softmax regression model, which has a
-convex cost function), but from Figure \ref{fig:cost_layer} we do get a rough sense 
-that the nolinearity of the cost function of neural networks grows as the number
-of hidden layer increases. We can see that the random initialization points (red end
-for each trace) are more concentrated under linear projection
-for the shallow models than for the deep ones. Another interesting phenomenon is that
-as the size of minibatch shrinks, the minibatch cost function landscape deviates further
-from the batch cost function (Figure \ref{fig:cost_minibatch}), and this might worth
-investigating in our further analyses as this might characterize the non-stationarity
-of neural network cost functions on minibatches.
+Although the visualizations do not convey much information beyond models
+without any hidden layers, from Figure \ref{fig:cost_layer} we do get a rough
+sense that the nolinearity of the cost function grows as the number of hidden
+layers increases. We see that the random initialization points (the red end of
+each trace) are more concentrated under linear projection for the shallow
+models than for the deep models. Another interesting phenomenon is that the
+objective deviates further from the ``true'' objective as evaluated on the full
+training set as the minibatch size decreases (Figure \ref{fig:cost_minibatch}).
+This may be worth investigating further in order to characterize the quality of
+the approximation to gradients and objectives given by a single minibatch. 
