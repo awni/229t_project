@@ -22,7 +22,7 @@ We also study the adaptive gradient algorithm (AdaGrad) with a diagonal
 preconditioning matrix $G$. The update can be written as
 \begin{align*}
 &G_{t+1} = G_{t} + \diag(\nabla \ell (\theta_t))^2 \\
-&\theta_{t+1} = \theta_t + G_{t+1}^{-1/2} \nabla \ell(\theta_t)
+&\theta_{t+1} = \theta_t - G_{t+1}^{-1/2} \nabla \ell(\theta_t)
 \end{align*} 
 
 First we evaluate each of the four optimization procedures described above. We
@@ -60,7 +60,7 @@ where we use the descent direction $v$ given by NAG and rescale this direction
 using the AdaGrad preconditioning matrix $G$. Results can be seen in Figure \ref{fig:bestcurves} 
 in the appendix. The accelerated AdaGrad seems to converge slightly faster on
 the MNIST training data, in particular during the later stages of training.
-However, since both algorithms converge extremely fast on the small MNIST
+However, since both algorithms converge rapidly on the small MNIST
 dataset, before making any claims we must rigorously test this method on harder
 problems.
 
