@@ -52,11 +52,7 @@ components with standard PCA and use this as the input.
 50 principal components were used for cost function visualization, and 100 
 for the rest of the experiments. This primarily achieves
 computational efficiency by decreasing the total number of parameters in the
-network. During optimization, networks are usually trained for 1000 iterations (updates) for
- cost function visualization, and 30 epochs
-(passes over the training data) for evaluating optimization methods, and at each epoch we
- randomly permute the
-order of the training examples.
+network. 
 
 \input{objective}
 \input{optimization}
@@ -91,20 +87,20 @@ such information.
 
 \begin{figure}[h!]
 {\centering
-\includegraphics[width=.23\textwidth]{../plots/results_.pdf} 
-\includegraphics[width=.23\textwidth]{../plots/results_16.pdf} 
-\includegraphics[width=.23\textwidth]{../plots/results_16_16.pdf}
-\includegraphics[width=.23\textwidth]{../plots/results_16_16_16_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_.png} 
+\includegraphics[width=.23\textwidth]{../plots/results_16.png} 
+\includegraphics[width=.23\textwidth]{../plots/results_16_16.png}
+\includegraphics[width=.23\textwidth]{../plots/results_16_16_16_16_16.png}
 }
 \caption{Visualization of cost function landscapes for neural networks of hidden layer number 0, 1, 2, and 5} \label{fig:cost_layer}
 \end{figure}
 
 \begin{figure}[h!]
 {\centering
-\includegraphics[width=.23\textwidth]{../plots/results_16_16_16.pdf}
-\includegraphics[width=.23\textwidth]{../plots/results_[6000]_16_16_16.pdf}
-\includegraphics[width=.23\textwidth]{../plots/results_[600]_16_16_16.pdf}
-\includegraphics[width=.23\textwidth]{../plots/results_[120]_16_16_16.pdf}
+\includegraphics[width=.23\textwidth]{../plots/results_16_16_16.png}
+\includegraphics[width=.23\textwidth]{../plots/results_[6000]_16_16_16.png}
+\includegraphics[width=.23\textwidth]{../plots/results_[600]_16_16_16.png}
+\includegraphics[width=.23\textwidth]{../plots/results_[120]_16_16_16.png}
 }
 \caption{Visualization of cost function landscapes for neural networks of 3 hidden layers, trained with minibatche sizes 60000, 6000, 600, and 120}\label{fig:cost_minibatch}
 \end{figure}
