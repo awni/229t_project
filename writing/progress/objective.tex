@@ -1,36 +1,31 @@
 \subsubsection*{Understanding the Objective}
 
 In order to gain insight about the objective function of neural networks, we
-ran a set of experiments with models that are comparably smaller than those
-used in our optimization experiments. Specifically, the networks have an input
-dimension of 50, an output dimension of 10, and hidden layers with 16 units
-each. We try to limit the model size in order to a) efficiently train the
-networks for repeated runs, and b) to save the trace of model parameters and
-gradients as the training progresses which are used to visualize the cost
-function.
+attempt to visualize them. To do this, we ran a set of experiments with models
+comparably smaller than those used in our optimization experiments.  The
+networks have an input dimension of 50 and hidden layers with 16 units each. We
+try to limit the model size in order to efficiently train the networks for
+repeated runs and to save the trace of model parameters and gradients as the
+training progresses (we use these to visualize the cost function).
 
 In these experiments we vary the number of hidden layers from zero to five and
 the minibatch size in $\{120,600,6000,60000\}$.  While adding hidden layers is
 known to help increase the expressivity of the model, we attempt to investigate
 if more layers also makes the objective function of the network more poorly
-conditioned. Further we wish to know if decreasing the minibatch size degrades
-our approximation to the objective function at each iteration.
+conditioned. Further we wish to investigate how decreasing minibatch size degrades
+our approximation to the objective function.
 
-We run SGD for 1,000 iterations with a fixed learning rate of 0.1, saving the
-objective, parameters and gradients at each iteration. For each model/minibatch
-setting, we repeat the network training for 20 independent random
-initializations and on the same plot compare these training traces with a
-technique introduced below. For the largest model we consider in this analysis
-(5 hidden layers of 16 units each) our trace files take tens of megabytes on
-disk, thus we are constrained to consider small modelsizes.
+We run SGD for 1,000 iterations with a fixed learning rate, saving the
+objective, parameters and gradients at each iteration. For each model setting,
+we repeat the network training starting from 20 independent random initializations and
+use these traces for our visualization.
 
-With these traces, we visualize the cost functions by linear projections to a
-lower dimensional space. Specifically, we compute the principal components of
-the covariance matrix of the gradient traces across the 20 trials for each
-setting, and project the model parameters into the subspace of the leading
-components. The logic behind this is to characterize the
-landscape of the cost function in the direction where the model parameters
-(despite initialization) travel the most. 
+To visualize the cost function, we compute the principal components of the
+covariance matrix of the gradient traces across the 20 trials for each setting,
+and project the model parameters into the subspace of the leading components.
+The logic behind this is to characterize the landscape of the cost function in
+the direction where the model parameters (despite initialization) travel the
+most. 
 
 Although the visualizations do not convey much information beyond models
 without any hidden layers, from Figure \ref{fig:cost_layer} we do get a rough
@@ -41,4 +36,4 @@ models than for the deep models. Another interesting phenomenon is that the
 objective deviates further from the ``true'' objective as evaluated on the full
 training set as the minibatch size decreases (Figure \ref{fig:cost_minibatch}).
 This may be worth investigating further in order to characterize the quality of
-the approximation to gradients and objectives given by a single minibatch. 
+the approximation to the objective given by a single minibatch. 

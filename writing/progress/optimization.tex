@@ -32,17 +32,16 @@ achieve fastest convergence are plotted in Figure \ref{fig:allcurves} in the
 appendix. Notice that the NAG and AdaGrad updaters far outstrip the others,
 although are neck and neck with each other.
 
-As we have begun to show, neural network objectives are ill-conditioned, and likely 
-suffer from long narrow ravines leading towards local optima surrounded with
-walls of high curvature. This hypothesis motivates the use of momentum to remove the
-oscillating iterations that SGD suffers from. AdaGrad also works to this affect
-by penalizing directions which we travel in large magnitudes often and
-encouraging directions with small but consistent gradients. AdaGrad converges
-faster than momentum methods in the early stages of learning; however,
-eventually it suffers from the problem of diminishing common directions of travel
-even if these directions are along the basin of the ravine. Thus in the long
-run, in order to achieve convergence along a ravine, we need a form of
-acceleration along directions of common travel which AdaGrad will not provide. 
+The network objective likely suffers from long narrow ravines leading towards
+local optima surrounded with walls of high curvature. This hypothesis motivates
+the use of momentum to encourage travel along the basin. AdaGrad also works to
+this affect by penalizing directions which we travel in large magnitudes often
+and encouraging directions with small but consistent gradients. AdaGrad
+converges faster than momentum methods in the early stages of learning;
+however, eventually suffers from the problem of diminishing common directions
+of travel even if these directions are along the basin of a ravine. To achieve
+convergence along a ravine, we need a form of acceleration along directions of
+common travel which AdaGrad will not provide. 
 
 The above discussion motivates combining the best of both the AdaGrad and
 NAG optimizers to form an accelerated {\it and} adaptive gradient optimizer. We
