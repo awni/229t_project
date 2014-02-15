@@ -15,7 +15,7 @@ def run():
     imDim = trainImages.shape[0]
     inputDim = 50
     outputDim = 10
-    layerSizes = [16]
+    layerSizes = []
 
     trainImages = trainImages.reshape(imDim**2,-1)
 

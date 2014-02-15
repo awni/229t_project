@@ -69,10 +69,11 @@ class SGD:
 
             self.model.addrandn(10./(999+self.it))
 
-            print "Cost on iteration %d is %f."%(self.it,cost)
-            self.costt.append(cost)
-            self.gradt.append(self.model.vectorize(grad))
-            self.paramt.append(self.model.paramVec())
+            if (self.it % 100 == 0):
+                print "Cost on iteration %d is %f."%(self.it,cost)
+                self.costt.append(cost)
+                self.gradt.append(self.model.vectorize(grad))
+                self.paramt.append(self.model.paramVec())
 
             if self.it % 2000 == 0:
                 if self.alpha > 1e-4:

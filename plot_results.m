@@ -6,10 +6,15 @@ function plot_results(suffix)
     end
 
     grad = load(['grad' suffix '.txt']);
-    grad=bsxfun(@minus,grad, mean(grad));
+    grad = bsxfun(@minus, grad, mean(grad));
     cost = load(['cost' suffix '.txt']);
     param = load(['param' suffix '.txt']);
-    points_per_trial = 1000;
+    points_per_trial = 100;
+    
+%     % downsample
+%     param = param(1:10:end,:);
+%     grad = grad(1:10:end,:);
+%     cost = cost(:,1:10:end);
     
     h = figure;
     
@@ -31,11 +36,16 @@ function plot_results(suffix)
     
     tmp = tsne(param);
     hold on;
+    cost = cost';
+    cost = cost(:);
     for i = 1:floor(size(tmp,1) / points_per_trial),
-        mesh([tmp(:,1),tmp(:,1)], [tmp(:,2),tmp(:,2)], [cost(:),cost(:)]);
+        idx = (i-1)*points_per_trial+1:i*points_per_trial;
+        mesh([tmp(idx,1),tmp(idx,1)], [tmp(idx,2),tmp(idx,2)], [cost(idx),cost(idx)]);
     end
 
     drawnow;
     
-    saveas(h, ['results' suffix '.fig']);
+    saveas(h, ['cost' suffix '.fig']);
+    
+    set(gcf,'PaperPosition',[0 0.1 5 4]); set(gcf,'PaperSize',[5 4.1]); print(gcf, ['cost' suffix '.pdf'],'-r200','-dpdf'); 
 end

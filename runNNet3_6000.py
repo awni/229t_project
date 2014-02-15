@@ -23,9 +23,9 @@ def run():
     pcer.computePCA(trainImages)
     whitenedTrain = pcer.whiten(trainImages, inputDim)
 
-    minibatch = whitenedTrain.shape[1]
+    minibatch = 6000
     print "minibatch size: %d" % (minibatch)
-    epochs = 10000
+    epochs = 1000
     stepSize = 1e-2
 
     nn = nnet.NNet(inputDim,outputDim,layerSizes,minibatch)
