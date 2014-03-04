@@ -52,18 +52,19 @@ function ydata = tsne(X, labels, no_dims, initial_dims, perplexity)
     % Perform preprocessing using PCA
     if ~initial_solution
         disp('Preprocessing data using PCA...');
-        if size(X, 2) < size(X, 1)
-            C = X' * X;
-        else
-            C = (1 / size(X, 1)) * (X * X');
-        end
-        [M, lambda] = eig(C);
-        [lambda, ind] = sort(diag(lambda), 'descend');
-        M = M(:,ind(1:initial_dims));
-        lambda = lambda(1:initial_dims);
-        if ~(size(X, 2) < size(X, 1))
-            M = bsxfun(@times, X' * M, (1 ./ sqrt(size(X, 1) .* lambda))');
-        end
+%         if size(X, 2) < size(X, 1)
+%             C = X' * X;
+%         else
+%             C = (1 / size(X, 1)) * (X * X');
+%         end
+        C = cov(X);
+        [M, lambda] = svds(C,initial_dims);
+%         [lambda, ind] = sort(diag(lambda), 'descend');
+%         M = M(:,ind(1:initial_dims));
+%         lambda = lambda(1:initial_dims);
+%         if ~(size(X, 2) < size(X, 1))
+%             M = bsxfun(@times, X' * M, (1 ./ sqrt(size(X, 1) .* lambda))');
+%         end
         X = bsxfun(@minus, X, mean(X, 1)) * M;
         clear M lambda ind
     end
