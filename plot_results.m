@@ -10,26 +10,92 @@ function plot_results(suffix)
     if ~iscell(suffix),
 
         grad = load(['grad' suffix '.txt']);
-        grad = bsxfun(@minus, grad, mean(grad));
+        %grad = bsxfun(@minus, grad, mean(grad));
         cost = load(['cost' suffix '.txt']);
         param = load(['param' suffix '.txt']);
         points_per_trial = 100;
+        
+        fprintf('Num param: %d\n', size(grad,2));
+        
+        t = zeros(points_per_trial, size(grad,2));
+        for i = 1:floor(size(param,1) / points_per_trial),
+            idx = (i-1)*points_per_trial+1:i*points_per_trial;
+            t = t + param(idx, :).^2;
+        end
+        
+        subplot(2,1,1);
+        imagesc(log(t)');
+        subplot(2,1,2);
+        plot(mean(log(t),2));
+        
+        
+        drawnow;
 
+        saveas(h, ['param' suffix '.fig']);
 
+        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['param' suffix '.pdf'],'-r200','-dpdf'); 
+        
+        h = figure;
+
+        t = zeros(points_per_trial, size(grad,2));
+        for i = 1:floor(size(grad,1) / 2 / points_per_trial),
+            idx = (i-1)*points_per_trial+1:2:i*2*points_per_trial;
+            t = t + grad(idx, :).^2;
+        end
+        
+        subplot(2,1,1);
+        imagesc(log(t)');
+        subplot(2,1,2);
+        plot(mean(log(t+1e-20),2));
+        
+        
+        drawnow;
+
+        saveas(h, ['grad' suffix '.fig']);
+
+        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['grad' suffix '.pdf'],'-r200','-dpdf'); 
+        
+        h = figure;
+        
+        t = zeros(points_per_trial, 1);
+        for i = 1:floor(size(grad,1) / 2 / points_per_trial),
+            idx = (i-1)*points_per_trial+1:2:i*2*points_per_trial;
+            t = t + sqrt(sum((grad(idx+1, :)-grad(idx,:)).^2,2) ./ sum((grad(idx,:)).^2,2));
+        end
+        
+        plot(log(t));
+        
+        drawnow;
+        saveas(h, ['second' suffix '.fig']);
+        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['second' suffix '.pdf'],'-r200','-dpdf'); 
+        
+        t = bsxfun(@rdivide, t, sqrt(sum(t.^2,2)));
+        angles = zeros(points_per_trial-1,1);
+        for i = 1:points_per_trial-1,
+            t0 = grad(i*2,:) - grad(i*2-1,:);
+            t1 = grad((i+1)*2,:) - grad((i+1)*2-1,:);
+            angles(i) = t0 * t1' / norm(t0,2) / norm(t1,2);
+        end
+        
+        h = figure;
+        plot(angles);
+        drawnow;
+        saveas(h, ['second_cosine' suffix '.fig']);
+        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['second_cosine' suffix '.pdf'],'-r200','-dpdf'); 
 
         %% PCA approach
-        [u,s,v]=svds(cov(grad),2);
-        disp(diag(s));
-        t = cost';
-        tmp=grad*v;
-        tmp = [tmp t(:)];
-    
-        hold on;
-        f = 1;
-        for i = 1:floor(size(tmp,1)/points_per_trial),
-            x=tmp((i-1)*points_per_trial+1:i*points_per_trial,:);
-            mesh([x(:,f),x(:,f)],[x(:,f+1),x(:,f+1)],[x(:,end),x(:,end)]);
-        end
+%         [u,s,v]=svds(cov(grad),2);
+%         disp(diag(s));
+%         t = cost';
+%         tmp=grad*v;
+%         tmp = [tmp t(:)];
+%     
+%         hold on;
+%         f = 1;
+%         for i = 1:floor(size(tmp,1)/points_per_trial),
+%             x=tmp((i-1)*points_per_trial+1:i*points_per_trial,:);
+%             mesh([x(:,f),x(:,f)],[x(:,f+1),x(:,f+1)],[x(:,end),x(:,end)]);
+%         end
 
         %% tSNE approach
 
@@ -42,11 +108,7 @@ function plot_results(suffix)
 %             mesh([tmp(idx,1),tmp(idx,1)], [tmp(idx,2),tmp(idx,2)], [cost(idx),cost(idx)]);
 %         end
 
-        drawnow;
-
-        saveas(h, ['grad' suffix '.fig']);
-
-        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['grad' suffix '.pdf'],'-r200','-dpdf'); 
+        
     else
         color = [1 0 0; 0 1 0; 0 0 1; 1 1 0; 0 1 1; 1 0 1; 0 0 0];
         N = length(suffix);

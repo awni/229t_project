@@ -73,6 +73,16 @@ class SGD:
                 print "Cost on iteration %d is %f."%(self.it,cost)
                 self.costt.append(cost)
                 self.gradt.append(self.model.vectorize(grad))
+
+                # save an extra set of gradients for second-order evaluations
+                if labels is None:
+                    cost,grad = self.model.costAndGrad(mb_data)
+                else:
+                    mb_labels = labels[perm[i:i+self.minibatch]]
+                    cost,grad = self.model.costAndGrad(mb_data,mb_labels)
+
+                self.gradt.append(self.model.vectorize(grad))
+
                 self.paramt.append(self.model.paramVec())
 
             if self.it % 2000 == 0:
