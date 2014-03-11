@@ -1,11 +1,39 @@
 \subsubsection*{Understanding the Objective}
--section on understanding the objective
 
-    - objective fn equation
+In order to gain insight about the objective function of neural networks, we
+attempt to visualize them. To do this, we ran a set of experiments with models
+comparably smaller than those used in our optimization experiments.  The
+networks have an input dimension of 50 and hidden layers with 16 units each. We
+try to limit the model size in order to efficiently train the networks for
+repeated runs and to save the trace of model parameters and gradients as the
+training progresses (we use these to visualize the cost function).
 
-    - visualization techiniques
+In these experiments we vary the number of hidden layers from zero to five and
+the minibatch size in $\{120,600,6000,60000\}$.  While adding hidden layers is
+known to help increase the expressivity of the model, we attempt to investigate
+if more layers also makes the objective function of the network more poorly
+conditioned. Further we wish to investigate how decreasing minibatch size degrades
+our approximation to the objective function.
 
-    - other techniques ?
+We run SGD for 1,000 iterations with a fixed learning rate, saving the
+objective, parameters and gradients at each iteration. For each model setting,
+we repeat the network training starting from 20 independent random initializations and
+use these traces for our visualization.
 
-    - example figure in appendix
+To visualize the cost function, we compute the principal components of the
+covariance matrix of the gradient traces across the 20 trials for each setting,
+and project the model parameters into the subspace of the leading components.
+The logic behind this is to characterize the landscape of the cost function in
+the direction where the model parameters (despite initialization) travel the
+most. 
 
+Although the visualizations do not convey much information beyond models
+without any hidden layers, from Figure \ref{fig:cost_layer} we do get a rough
+sense that the nolinearity of the cost function grows as the number of hidden
+layers increases. We see that the random initialization points (the red end of
+each trace) are more concentrated under linear projection for the shallow
+models than for the deep models. Another interesting phenomenon is that the
+objective deviates further from the ``true'' objective as evaluated on the full
+training set as the minibatch size decreases (Figure \ref{fig:cost_minibatch}).
+This may be worth investigating further in order to characterize the quality of
+the approximation to the objective given by a single minibatch. 
