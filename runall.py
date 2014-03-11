@@ -1,11 +1,12 @@
 import os
 
-optimizers = ['adaccel2'] #['sgd','momentum','nesterov','adagrad']
-epochs = 30
-layers="200,200"
-steps = [5e-2] #[1e-1,1e-2,1e-3]
-momentums = [0.9] #[0.9,0.8,0.7,0.6]
-anneals = [1]
+optimizers = ['adagrad','nesterov'] #,'momentum','adagrad'] #['sgd','momentum','nesterov','adagrad']
+#optimizers = ['adagrad3','adagrad','adaccel2','nesterov']
+epochs = 60
+layers="200,200,200,200,200"
+steps = [1e-1,1e-2,1e-3]
+momentums = [0.90,0.99] #[0.9,0.8,0.7,0.6]
+anneals = [1.0]
 
 commForm = "python runNNet.py --layers %s --optimizer %s --step %f --epochs %d \
 	    --momentum %d --anneal %f --outFile %s"

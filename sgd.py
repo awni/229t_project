@@ -16,23 +16,13 @@ class SGD:
         self.alpha = alpha # learning rate
         self.minibatch = minibatch # minibatch
 	self.optimizer = optimizer
-	if self.optimizer == 'momentum':
-	    print "Using momentum.."
+	if self.optimizer == 'momentum' or self.optimizer == 'nesterov':
+	    print "Using %s.."%self.optimizer
 	    self.velocity = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
 			      for w,b in self.model.stack]
-	elif self.optimizer == 'nesterov':
-	    print "Using nesterov.."
-	    self.velocity = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
-			      for w,b in self.model.stack]
-	elif self.optimizer == 'adagrad':
+	elif self.optimizer == 'adagrad' or self.optimizer == 'adagrad3' or self.optimizer == 'adadelta':
 	    print "Using adagrad.."
 	    self.gradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
-			      for w,b in self.model.stack]
-	elif self.optimizer == 'adaccel':
-	    print "Using adaccel.."
-	    self.gradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
-			      for w,b in self.model.stack]
-	    self.sqgradt = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
 			      for w,b in self.model.stack]
 	elif self.optimizer == 'adaccel2':
 	    print "Using adaccel2.."
@@ -40,13 +30,13 @@ class SGD:
 			      for w,b in self.model.stack]
 	    self.velocity = [[gp.zeros(w.shape),gp.zeros(b.shape)] 
 			      for w,b in self.model.stack]
-
 	elif self.optimizer == 'sgd':
 	    print "Using sgd.."
 	else:
 	    raise ValueError("Invalid optimizer")
 
 	self.costt = []
+	self.expcost = []
 
     def run(self,data,labels=None):
         """
@@ -79,6 +69,17 @@ class SGD:
                 mb_labels = labels[perm[i:i+self.minibatch]]
                 cost,grad = self.model.costAndGrad(mb_data,mb_labels)
 
+	    # undo update
+	    if self.optimizer == 'nesterov' or self.optimizer == 'adaccel2':
+		# w = w-mom*velocity
+		self.model.updateParams(-mom,self.velocity)
+
+	    # compute exponentially weighted cost
+	    if self.it > 1:
+		self.expcost.append(.01*cost + .99*self.expcost[-1])
+	    else:
+		self.expcost.append(cost)
+
 	    if self.optimizer == 'momentum':
 		if self.it > momIncrease:
 		    mom = self.momentum
@@ -89,11 +90,22 @@ class SGD:
 		scale = -1.0
 
 	    elif self.optimizer == 'adagrad':
+		epsilon = 1e-8
 		# trace = trace+grad.^2
-		self.gradt = [[gt[0]+g[0]*g[0],gt[1]+g[1]*g[1]] 
+		self.gradt = [[gt[0]+g[0]*g[0]+epsilon,gt[1]+g[1]*g[1]+epsilon] 
 			for gt,g in zip(self.gradt,grad)]
 		# update = grad.*trace.^(-1/2)
 		update =  [[g[0]*(1./gp.sqrt(gt[0])),g[1]*(1./gp.sqrt(gt[1]))]
+			for gt,g in zip(self.gradt,grad)]
+		scale = -self.alpha
+
+	    elif self.optimizer == 'adagrad3':
+		epsilon = 1e-8
+		# trace = trace+grad.^2
+		self.gradt = [[gt[0]+g[0]*g[0]+epsilon,gt[1]+g[1]*g[1]+epsilon] 
+			for gt,g in zip(self.gradt,grad)]
+		# update = grad.*trace.^(-1/3)
+		update =  [[g[0]*(1./(gt[0]**(1./3))),g[1]*(1./(gt[1]**(1./3)))]
 			for gt,g in zip(self.gradt,grad)]
 		scale = -self.alpha
 
@@ -104,17 +116,14 @@ class SGD:
 		update = self.velocity
 		scale = 1.0
 
-	    elif self.optimizer == 'adaccel':
-		# trace = trace+grad
-		self.gradt = [[gt[0]+g[0],gt[1]+g[1]] 
+	    elif self.optimizer == 'adadelta':
+		epsilon = 1e-8
+		# trace = trace+grad.^2
+		self.gradt = [[0.99*gt[0]+g[0]*g[0]+epsilon,0.99*gt[1]+g[1]*g[1]+epsilon] 
 			for gt,g in zip(self.gradt,grad)]
-		# sqtrace = sqtrace+grad.^2
-		self.sqgradt = [[gt[0]+g[0]*g[0],gt[1]+g[1]*g[1]] 
-			for gt,g in zip(self.sqgradt,grad)]
-
 		# update = grad.*trace.^(-1/2)
-		update =  [[g[0]*(1./gp.sqrt(sqgt[0]-gt[0])),g[1]*(1./gp.sqrt(sqgt[1]-gt[1]))]
-			for gt,sqgt,g in zip(self.gradt,self.sqgradt,grad)]
+		update =  [[g[0]*(1./gp.sqrt(gt[0])),g[1]*(1./gp.sqrt(gt[1]))]
+			for gt,g in zip(self.gradt,grad)]
 		scale = -self.alpha
 
 	    elif self.optimizer == 'adaccel2':
@@ -126,7 +135,7 @@ class SGD:
 			for gt,g in zip(self.gradt,grad)]
 
 		# update = velocity.*trace.^(-1/2)
-		update =  [[v[0]*(1./gp.sqrt(gt[0])),v[1]*(1./gp.sqrt(gt[1]))]
+		update =  [[v[0]*(1./(gt[0]**(1./2))),v[1]*(1./(gt[1]**(1./2)))]
 			for gt,v in zip(self.gradt,self.velocity)]
 		scale = 1.0
 
@@ -139,5 +148,5 @@ class SGD:
 
 	    self.costt.append(cost)
             if self.it%10 == 0:
-                print "Cost on iteration %d is %f."%(self.it,cost)
+		print "Iter %d : Cost=%.4f, ExpCost=%.4f."%(self.it,cost,self.expcost[-1])
             
