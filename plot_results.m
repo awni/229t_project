@@ -5,7 +5,7 @@ function plot_results(suffix)
         suffix = [];
     end
     
-    h = figure;
+%     h = figure;
     
     if ~iscell(suffix),
 
@@ -17,71 +17,111 @@ function plot_results(suffix)
         
         fprintf('Num param: %d\n', size(grad,2));
         
-        t = zeros(points_per_trial, size(grad,2));
-        for i = 1:floor(size(param,1) / points_per_trial),
-            idx = (i-1)*points_per_trial+1:i*points_per_trial;
-            t = t + param(idx, :).^2;
-        end
+        num_trials = floor(size(param,1) / points_per_trial);
         
-        subplot(2,1,1);
-        imagesc(log(t)');
-        subplot(2,1,2);
-        plot(mean(log(t),2));
+%         t = zeros(points_per_trial, size(grad,2));
+%         for i = 1:num_trials,
+%             idx = (i-1)*points_per_trial+1:i*points_per_trial;
+%             t = t + param(idx, :).^2;
+%         end
+%         
+%         subplot(2,1,1);
+%         imagesc((param)'); colorbar;
+%         subplot(2,1,2);
+%         plot(mean(log(t),2));
         
         
-        drawnow;
-
-        saveas(h, ['param' suffix '.fig']);
-
-        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['param' suffix '.pdf'],'-r200','-dpdf'); 
+%         drawnow;
+% 
+%         saveas(h, ['param' suffix '.fig']);
+% 
+%         set(h,'PaperPosition',[0 0.1 10 7]); set(h,'PaperSize',[10 7.1]); print(h, ['param' suffix '.pdf'],'-r200','-dpdf'); 
         
         h = figure;
 
         t = zeros(points_per_trial, size(grad,2));
-        for i = 1:floor(size(grad,1) / 2 / points_per_trial),
+        for i = 1:num_trials,
             idx = (i-1)*points_per_trial+1:2:i*2*points_per_trial;
             t = t + grad(idx, :).^2;
         end
         
-        subplot(2,1,1);
-        imagesc(log(t)');
-        subplot(2,1,2);
-        plot(mean(log(t+1e-20),2));
-        
-        
-        drawnow;
-
-        saveas(h, ['grad' suffix '.fig']);
-
-        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['grad' suffix '.pdf'],'-r200','-dpdf'); 
-        
-        h = figure;
-        
-        t = zeros(points_per_trial, 1);
-        for i = 1:floor(size(grad,1) / 2 / points_per_trial),
-            idx = (i-1)*points_per_trial+1:2:i*2*points_per_trial;
-            t = t + sqrt(sum((grad(idx+1, :)-grad(idx,:)).^2,2) ./ sum((grad(idx,:)).^2,2));
+        t2 = zeros(size(t));
+        t2(1,:) = t(1,:);
+        for i = 2:points_per_trial,
+            t2(i,:) = 1*t(i,:)+.9*t2(i-1,:); 
         end
         
-        plot(log(t));
+%         temp=bsxfun(@rdivide, abs(grad), sum(abs(grad)));
+%         temp=sum(temp.*log(temp+1e-6));
+%         
+%         plot(temp);
+%         
+%         saveas(h, ['ppt0.fig']);
+% 
+%         set(h,'PaperPosition',[0 0.1 10 5]); set(h,'PaperSize',[10 5.1]); print(h, ['ppt0.pdf'],'-r600','-dpdf'); 
+% 
+%         h = figure;
+
         
-        drawnow;
-        saveas(h, ['second' suffix '.fig']);
-        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['second' suffix '.pdf'],'-r200','-dpdf'); 
-        
-        t = bsxfun(@rdivide, t, sqrt(sum(t.^2,2)));
-        angles = zeros(points_per_trial-1,1);
-        for i = 1:points_per_trial-1,
-            t0 = grad(i*2,:) - grad(i*2-1,:);
-            t1 = grad((i+1)*2,:) - grad((i+1)*2-1,:);
-            angles(i) = t0 * t1' / norm(t0,2) / norm(t1,2);
-        end
+        imagesc(grad'); colorbar; 
+        load ppt1cm;
+        colormap(ppt1cm);
+        xlabel('Param #'); ylabel('Training Iteration');
+        title('Gradient trace');
+        saveas(h, ['ppt1.fig']);
+
+        set(h,'PaperPosition',[0 0.1 10 5]); set(h,'PaperSize',[10 5.1]); print(h, ['ppt1.pdf'],'-r600','-dpdf'); 
         
         h = figure;
-        plot(angles);
-        drawnow;
-        saveas(h, ['second_cosine' suffix '.fig']);
-        set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['second_cosine' suffix '.pdf'],'-r200','-dpdf'); 
+        imagesc(cumsum(t',2)); colorbar;
+        xlabel('Param #'); ylabel('Training Iteration');
+        title('Adagrad denominator');
+        saveas(h, ['ppt2.fig']);
+
+        set(h,'PaperPosition',[0 0.1 10 5]); set(h,'PaperSize',[10 5.1]); print(h, ['ppt2.pdf'],'-r600','-dpdf'); 
+        
+        h = figure;
+        imagesc(t2');  colorbar;
+        xlabel('Param #'); ylabel('Training Iteration');
+        title('Ada-delta denominator');
+        saveas(h, ['ppt3.fig']);
+
+        set(h,'PaperPosition',[0 0.1 10 5]); set(h,'PaperSize',[10 5.1]); print(h, ['ppt3.pdf'],'-r600','-dpdf'); 
+        
+        
+%         drawnow;
+% 
+%         saveas(h, ['grad' suffix '.fig']);
+% 
+%         set(h,'PaperPosition',[0 0.1 10 5]); set(h,'PaperSize',[10 7.1]); print(h, ['grad' suffix '.pdf'],'-r200','-dpdf'); 
+        
+%         h = figure;
+%         
+%         t = zeros(points_per_trial, 1);
+%         for i = 1:num_trials,
+%             idx = (i-1)*points_per_trial+1:2:i*2*points_per_trial;
+%             t = t + sqrt(sum((grad(idx+1, :)-grad(idx,:)).^2,2) ./ sum((grad(idx,:)).^2,2));
+%         end
+%         
+%         plot(log(t));
+%         
+%         drawnow;
+%         saveas(h, ['second' suffix '.fig']);
+%         set(h,'PaperPosition',[0 0.1 7 5]); set(h,'PaperSize',[7 5.1]); print(h, ['second' suffix '.pdf'],'-r200','-dpdf'); 
+        
+%         t = bsxfun(@rdivide, t, sqrt(sum(t.^2,2)));
+%         angles = zeros(points_per_trial-1,1);
+%         for i = 1:points_per_trial-1,
+%             t0 = grad(i*2,:) - grad(i*2-1,:);
+%             t1 = grad((i+1)*2,:) - grad((i+1)*2-1,:);
+%             angles(i) = t0 * t1' / norm(t0,2) / norm(t1,2);
+%         end
+%         
+%         h = figure;
+%         plot(angles, '.k');
+%         drawnow;
+%         saveas(h, ['second_cosine' suffix '.fig']);
+%         set(h,'PaperPosition',[0 0.1 10 7]); set(h,'PaperSize',[10 7.1]); print(h, ['second_cosine' suffix '.pdf'],'-r200','-dpdf'); 
 
         %% PCA approach
 %         [u,s,v]=svds(cov(grad),2);
