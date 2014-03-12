@@ -1,0 +1,57 @@
+\documentclass[11pt,english]{article}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
+\usepackage{subcaption}
+
+% Some macros for your convenience
+\newcommand\bbR{\ensuremath{\mathbb{R}}} % Real numbers
+\newcommand\bbZ{\ensuremath{\mathbb{Z}}} % Integers
+\newcommand\bbE{\ensuremath{\mathbb{E}}} % Expectation
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\DeclareMathOperator*{\var}{Var} % Variance
+\DeclareMathOperator*{\cov}{Cov} % Covariance
+\newcommand{\1}{\mathbb{I}} % Indicator 
+
+\title{
+{\large CS229T/STATS231 Winter 2014 -- Final Report }
+}
+
+\author{ \large
+Awni Hannun \\
+\texttt{awni@stanford.edu}
+\and
+Peng Qi \\
+\texttt{pengqi@stanford.edu}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+Outline
+-Introduction
+-Optimization Algorithms
+  -Accelerated Methods
+  -Adaptive gradient
+  -Discussion on Convergence
+-Models
+  -crossentropy network
+  -AutoEncoder (cite Hinton paper, NAG paper)
+-Analysis
+  -visualizations of gradient/adagrad traces
+  -anything else
+-Results
+  - training curves for all models
+  - plot of test error vs training error for three best (NAG, adagrad(3), decayed adagrad)
+-Conclusion
+
+-Appendix
+-possibly include regret bound for decayed adagrad?
+
+
+\bibliography{refs}{}
+\bibliographystyle{plain}
+
+\end{document}
+
