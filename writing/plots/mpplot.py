@@ -41,7 +41,7 @@ inches_per_pt = 1.0/72.27               # Convert pt to inch
 golden_mean = (sqrt(5)-1.0)/2.0         # Aesthetic ratio
 fig_width = fig_width_pt*inches_per_pt  # width in inches
 fig_height = fig_width*golden_mean + 1.0      # height in inches
-fig_size =  [fig_width,fig_height]
+fig_size =  [fig_width+0.5,fig_height]
 params = {'backend': 'ps',
            'axes.labelsize': 8,
            'text.fontsize': 10,
@@ -62,5 +62,5 @@ plt.plot(allCurves[:,3],'-r',label='AdaDelta',linewidth=0.5)
 plt.xlabel('Iteration')
 plt.ylabel('Training Error')
 plt.legend()
-plt.savefig('allcurves.pdf')
+plt.savefig('mnist_ae.pdf')
 
