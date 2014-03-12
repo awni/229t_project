@@ -66,7 +66,7 @@ function plot_results(suffix)
         imagesc(grad'); colorbar; 
         load ppt1cm;
         colormap(ppt1cm);
-        xlabel('Param #'); ylabel('Training Iteration');
+        ylabel('Param #'); xlabel('Training Iteration');
         title('Gradient trace');
         saveas(h, ['ppt1.fig']);
 
@@ -74,7 +74,7 @@ function plot_results(suffix)
         
         h = figure;
         imagesc(cumsum(t',2)); colorbar;
-        xlabel('Param #'); ylabel('Training Iteration');
+        ylabel('Param #'); xlabel('Training Iteration');
         title('Adagrad denominator');
         saveas(h, ['ppt2.fig']);
 
@@ -82,7 +82,7 @@ function plot_results(suffix)
         
         h = figure;
         imagesc(t2');  colorbar;
-        xlabel('Param #'); ylabel('Training Iteration');
+        ylabel('Param #'); xlabel('Training Iteration');
         title('Ada-delta denominator');
         saveas(h, ['ppt3.fig']);
 
