@@ -1,0 +1,66 @@
+\section{Optimization}
+
+We consider two families of stochastic optimization algorithms. Traditionally
+used in optimizing deep neural networks, the first class is that of momentum
+based methods which have recently been generalized and included the broader
+group of accelerated gradient algorithms \cite{sutskever_2013}. The second class
+includes variations on the adaptive gradient algorithms as presented in
+\cite{duchi_2011}.
+
+\subsection{Accelerated Gradient}
+
+The accelerated gradient methods are a generalization of the basic stochastic
+gradient descent (SGD) optimization procedure. Let $\ell(\theta)$ be the loss
+function of the network with parameters $\theta$. We use accelerated SGD
+methods that update the parameters at time $t$ according to
+\begin{equation}
+\begin{aligned}
+&v_{t+1} = \mu v_t - \eta \nabla \ell (\theta_t + \gamma v_t) \\
+&\theta_{t+1} = \theta_t + v_{t+1}
+\end{aligned}
+\end{equation}
+where $\eta$ is the learning rate, and the parameter $\mu$, known as the
+momentum parameter, dictates how much gradient history we take into account at
+every update. If we set $\mu = 0$ we recover plain SGD, and setting $\mu = 1$
+uses the full gradient history at every update.  The $\gamma$ parameter is
+either active and set as $\gamma = \mu$ or inactive and set as $\gamma = 0$.
+When $\gamma$ is inactive, we have typical SGD with ``momentum'', also known as
+classical momentum (CM). On the other hand, when $\gamma$ is active the
+procedure is known as Nesterov's accelerated graient (NAG).
+
+A common belief is that network objectives likely suffer from long narrow
+ravines leading towards local optima surrounded with walls of high curvature.
+This hypothesis motivates the use of momentum to encourage persistent
+directions of travel along the basin and suppress unwanted oscillation.
+
+\subsection{Adaptive Gradient}
+
+We study modifications to the adaptive gradient algorithm (AdaGrad) with the
+diagonal preconditioning matrix $G$. The update can be written as
+\begin{equation}
+\begin{aligned}
+&G_{t+1} = G_{t} + \diag(\nabla \ell (\theta_t))^2 \\
+&\theta_{t+1} = \theta_t - G_{t+1}^{-1/2} \nabla \ell(\theta_t)
+\end{aligned} 
+\end{equation}
+
+In some sense AdaGrad achieves a similar affect as NAG by penalizing
+oscillating directions in which we take large steps and encouraging directions
+with small but consistent gradients. However, in other aspects the optimization
+routines behave quite differently. A simple property of AdaGrad which as we
+show later can drasitcally affect optimization is the nondecreasing
+monotinicity of the matrix $G$. This leads AdaGrad to penalize large yet
+consistent directions of travel in the optimization process. This proves
+locally favorable in most of the models studied in the next section, but
+globally the behaviour results in better performance of NAG routine over the
+vanilla AdaGrad algorithm.
+
+This motivates two simple variations of the AdaGrad algorithm. The first is to
+replace the square root on the matrix $G_t$ with a function which grows less
+quickly (e.g. cube root). The second is to decay $G_t$ by a factor of $\gamma
+\in (0,1]$ before including it in the update for $G_{t+1}$. This is close to
+the AdaDelta algorithm presented in \cite{zeiler_2012}, but there they take a
+convex combination of the two terms in the update of $G_{t+1}$ whereas here we
+only decay the gradient history term.
+
+% Discuss convergence properties of each method?

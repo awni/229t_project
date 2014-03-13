@@ -1,6 +1,26 @@
 \documentclass[11pt,english]{article}
 \usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
-\usepackage{subcaption}
+\usepackage{subcaption,multicol}
+\usepackage{titlesec}
+
+% Small sections headers
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+\titleformat*{\subsubsection}{\normalsize\bfseries}
+\titleformat*{\paragraph}{\normalsize\bfseries}
+\titleformat*{\subparagraph}{\normalsize\bfseries}
+
+% Margins
+\evensidemargin -0.23in  
+\oddsidemargin -0.23in 
+\setlength\textheight{9.0in}
+\setlength\textwidth{6.75in} 
+\setlength\columnsep{0.25in}
+\setlength\headheight{10pt}
+\setlength\headsep{10pt} 
+\addtolength{\topmargin}{-20pt}
+\addtolength{\topmargin}{-0.29in}
+
 
 % Some macros for your convenience
 \newcommand\bbR{\ensuremath{\mathbb{R}}} % Real numbers
@@ -13,7 +33,7 @@
 \DeclareMathOperator*{\cov}{Cov} % Covariance
 \newcommand{\1}{\mathbb{I}} % Indicator 
 
-\title{
+\title{ Optimization Properties of Deep Networks \\
 {\large CS229T/STATS231 Winter 2014 -- Final Report }
 }
 
@@ -28,30 +48,17 @@ Peng Qi \\
 
 \begin{document}
 \maketitle
+\begin{multicols}{2}
 
-Outline
--Introduction
--Optimization Algorithms
-  -Accelerated Methods
-  -Adaptive gradient
-  -Discussion on Convergence
--Models
-  -crossentropy network
-  -AutoEncoder (cite Hinton paper, NAG paper)
--Analysis
-  -visualizations of gradient/adagrad traces
-  -anything else
--Results
-  - training curves for all models
-  - plot of test error vs training error for three best (NAG, adagrad(3), decayed adagrad)
--Conclusion
+\input{introduction}
+\input{optimization}
+\input{experiments}
+\input{analysis}
+\input{conclusion}
 
--Appendix
--possibly include regret bound for decayed adagrad?
-
-
-\bibliography{refs}{}
+\bibliography{../refs}{}
 \bibliographystyle{plain}
+\end{multicols}
 
 \end{document}
 
