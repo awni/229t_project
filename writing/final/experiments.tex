@@ -40,10 +40,74 @@ preprocessing as that of the MNIST data.
 
 \subsection{Results}
 
-- discussion on trying SGD, CM, NAG, AdA 
-- classification curves for MNIST and CIFAR
-- discussion
-- curve for auto encoder and discussion
-- discussion of affect of learning rate, momentum etc. Include learning rate figures in appendix.
-  - NAG is affected but not nearly as much as adagrad which is not nearly as affected as decayed adagrad
-- generalization error?  - plot of test error vs training error for three best (NAG, adagrad(3), decayed adagrad)
+As a preliminary, we grid searched over all learning rate and momentum
+hyperparameters to select the best for each optimization strategy including
+vanilla SGD and CM. The standard SGD and CM (e.g.  $\gamma=0$ in \ref{nag})
+optimization algorithms did not converge nearly as quickly as variations of
+AdaGrad and the NAG optimizers, thus we restrict our attention to those two in
+the following results and analysis.
+
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{mnist_nn}}
+\caption{Learning curves for the classification network on MNIST. The network
+has 4 hidden layers each with 200 hidden units. The y-axis displays a windowed
+average of the crossentropy cost after each parameter update. Ada3 is the cube
+root version of AdaGrad as discussed in section \ref{adagrad}.}
+\label{mnist_nn}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{cifar_nn}}
+\caption{Learning curves for the classification network on CIFAR-10. Details
+are the same as Figure \ref{mnist_nn}.}
+\label{cifar_nn}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+In both classification networks trained on MNIST and CIFAR-10 (cf. Figures
+\ref{mnist_nn} and \ref{cifar_nn} respectively), NAG and standard AdaGrad
+perform comparably well. However, by choosing $\gamma$ wisely for the decayed
+version of AdaGrad, we can achieve much faster convergence particularly after
+the initial stages of fast learning. The oscillations in Figure \ref{cifar_nn}
+are somewhat inexplicable. For the NAG updater these oscillations could be due
+to the same observations as \cite{odonoghue_2012}, suggesting that the momentum
+is on the high side. However, we observe fastest convergence with the momentum
+set approximately in the interval $\mu \in [0.9,0.99]$. This also suggests that
+an adaptive restart of the velocity $v_t$, (i.e. resetting the velocity to zero
+on some indicator such as an increase in the objective function) could achieve
+faster convergence \cite{odonoghue_2012}. 
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{mnist_ae}}
+\caption{Learning curves for the autoencoder used in \cite{hinton_2006}. The
+network has 7 hidden layers of sizes 1000, 500, 250, 30, 250, 500, and 1000
+with 1.6 million trainable parameters. The y-axis is a windowed average of
+mean-squared reconstruction error, the objective used to train the network.}
+\label{mnist_ae}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+In order to robustly test the decayed version of the AdaGrad algorithm, we
+trained an autoencoder with 7 hidden layers. Again, with the correct setting of
+$\gamma$ in the decayed version of AdaGrad, we notice much faster convergence,
+although the difference between NAG is not as pronounced in the later stages of
+learning. The number of iterations needed to train this network causes the
+vanishing learning rate problem for AdaGrad to be more severe even for the
+cubic version. 
+
+Figures xxx  in the appendix demonstrate another nice property of the decayed
+version of AdaGrad, namely robustness to learning rate. Notice that in Figure
+xx if we do not tune the learning rate well, AdaGrad will simply not converge
+and NAG (cf. Figure xx), while slightly more robust, will take a long time.
+However, as demonstrated in Figure xx, the decayed AdaGrad enjoys a robustness
+to a wide range of learning rates, converging quickly to nearly the same point
+at the same rate after the initial stages of learning. 

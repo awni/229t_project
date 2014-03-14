@@ -14,6 +14,7 @@ gradient descent (SGD) optimization procedure. Let $\ell(\theta)$ be the loss
 function of the network with parameters $\theta$. We use accelerated SGD
 methods that update the parameters at time $t$ according to
 \begin{equation}
+\label{nag}
 \begin{aligned}
 &v_{t+1} = \mu v_t - \eta \nabla \ell (\theta_t + \gamma v_t) \\
 &\theta_{t+1} = \theta_t + v_{t+1}
@@ -34,6 +35,7 @@ This hypothesis motivates the use of momentum to encourage persistent
 directions of travel along the basin and suppress unwanted oscillation.
 
 \subsection{Adaptive Gradient}
+\label{adagrad}
 
 We study modifications to the adaptive gradient algorithm (AdaGrad) with the
 diagonal preconditioning matrix $G$. The update can be written as

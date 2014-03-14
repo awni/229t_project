@@ -1,0 +1,30 @@
+\section{Further Experiments}
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{mnist_ae_adagrad_lrs}}
+\caption{Learning curves for the AdaGrad optimizer with different global step size $\eta$. The autoencoder is the same as in Figure \ref{mnist_ae}.}
+\label{mnist_ae_adagrad_lrs}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{mnist_ae_nesterov_lrs}}
+\caption{Learning curves for the Nesterov optimizer with different global step sizes $\eta$ and a fixed momentum of $\mu=0.99$. The autoencoder is the same as in Figure \ref{mnist_ae}.}
+\label{mnist_ae_nesterov_lrs}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\centerline{\includegraphics[width=\columnwidth]{mnist_ae_adadelta_lrs}}
+\caption{Learning curves for the decayed version of AdaGrad, $\gamma=0.99$, with different global step sizes $\eta$. The autoencoder is the same as in Figure \ref{mnist_ae}.}
+\label{mnist_ae_adagrad_lrs}
+\vskip -.4in
+\end{center}
+\end{figure}
+
+

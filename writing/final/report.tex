@@ -1,6 +1,6 @@
-\documentclass[11pt,english]{article}
+\documentclass[11pt,english,twocolumn]{article}
 \usepackage{fullpage,enumitem,amsmath,amssymb,graphicx}
-\usepackage{subcaption,multicol}
+\usepackage{subcaption,multicol,caption}
 \usepackage{titlesec}
 
 % Small sections headers
@@ -49,8 +49,11 @@ Peng Qi \\
 \date{}
 
 \begin{document}
-\maketitle
-\begin{multicols}{2}
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+  \end{@twocolumnfalse}
+  ]
 
 \input{introduction}
 \input{optimization}
@@ -60,7 +63,10 @@ Peng Qi \\
 
 \bibliography{../refs}{}
 \bibliographystyle{plain}
-\end{multicols}
+
+\newpage
+\appendix
+\input{appendix}
 
 \end{document}
 
