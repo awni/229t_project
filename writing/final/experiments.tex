@@ -17,13 +17,13 @@ on input $x^{(i)}$ is given by
 \begin{align}
 \ell(x^{(i)}) = \frac{1}{2} \|x^{(i)} - h(x^{(i)})\|_2^2
 \end{align}
-and $h$ is the function which maps the network input to output.
+and where $h$ is the function which maps the network input to output.
 
 The number of hidden layers and size of the networks vary; for the MNIST and
 CIFAR classification experiments described below we use between 2 - 4 hidden
 layers with 200 units each. The autoencoder is only trained on MNIST, and we
 use the same 1.6 million parameter, 7 hidden layer network as in
-\cite{hinton_2006} which is known to be a difficult to optimize benchmark. The
+\cite{hinton_2006}, which is known to be a difficult to optimize benchmark. The
 leaky rectified linear nonlinearity ($f(x) = \max\{0.01x,x\}$) is applied at
 each hidden unit.  Most computation is accelerated using GPUs and the Gnumpy
 library for Python \cite{tielemen_2010}.
@@ -104,10 +104,13 @@ learning. The number of iterations needed to train this network causes the
 vanishing learning rate problem for AdaGrad to be more severe even for the
 cubic version. 
 
-Figures xxx  in the appendix demonstrate another nice property of the decayed
-version of AdaGrad, namely robustness to learning rate. Notice that in Figure
-xx if we do not tune the learning rate well, AdaGrad will simply not converge
-and NAG (cf. Figure xx), while slightly more robust, will take a long time.
-However, as demonstrated in Figure xx, the decayed AdaGrad enjoys a robustness
-to a wide range of learning rates, converging quickly to nearly the same point
-at the same rate after the initial stages of learning. 
+Figures \ref{mnist_ae_adagrad_lrs},\ref{mnist_ae_nesterov_lrs} and
+\ref{mnist_ae_adadelta_lrs} in the appendix demonstrate another nice property
+of the decayed version of AdaGrad, namely robustness to learning rate. Notice
+that in Figure \ref{mnist_ae_adagrad_lrs} if we do not tune the learning rate
+well, AdaGrad will simply not converge and NAG (cf. Figure
+\ref{mnist_ae_nesterov_lrs}), while slightly more robust, will take a long
+time.  However, as demonstrated in Figure \ref{mnist_ae_adadelta_lrs}, the
+decayed AdaGrad enjoys a robustness to a wide range of learning rates,
+converging quickly to nearly the same point at the same rate after the initial
+stages of learning. 

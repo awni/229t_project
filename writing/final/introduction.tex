@@ -1,16 +1,16 @@
 \section{Introduction}
 
 Multilayer neural networks and other deep models have gained considerable
-traction over the past several years demonstrating state-of-the-art performance
-in many applications. Correspondingly, much work has been done to improve
-methods for optimizing these functions. This has proven difficult due to the
-highly nonconvex landscape of the typical multilayer objective and the supposed 
-ill-conditioned objectives. Given growth in dataset sizes and
-that these highly expressive models tend to be used in the large data setting,
-stochastic optimization methods are common. However, stochastic methods tend to
-come with a host of hyperparameters and much tuning is involved to get these to
-work well which has lead to general disagreement as to the supieriority of a
-particular algorithm. 
+traction over the past several years, demonstrating state-of-the-art
+performance in many applications. Correspondingly, much work has been done to
+improve methods for optimizing these functions. This has proven difficult due
+to the highly nonconvex and supposed ill-conditioned landscape of the typical
+multilayer network objective. Given growth in dataset sizes and that these
+highly expressive models tend to be used in the large data setting, stochastic
+optimization methods are common. However, stochastic methods tend to come with
+a host of hyperparameters and much tuning is involved to get these to work well
+which has lead to general disagreement as to the supieriority of a particular
+algorithm. 
 
 Until recently stochastic gradient descent (SGD) with momentum has been the
 standard stochastic optimizer used with deep neural networks (DNNs)
@@ -26,14 +26,14 @@ place and furthermore still requires the training of many models which can be
 prohibitive. 
 
 Furthermore, recent work has begun to attempt an analytical understanding of
-these types of heirarchichal models; however, often the results are derived using
-simplifications or modifications of a typical DNN which make them not
+these types of heirarchichal models; however, often the results are derived
+using simplifications or modifications of a typical DNN which make them not
 applicable in practice \cite{saxe_2013}. 
 
 We attempt to prescribe a stochastic optimization procedure for the typical
-multilayer neural network objective. We develop a deeper
-understanding of the most common objectives and architectures used in this
-setting. We apply this analysis to motivate the selection of optimization
-procedures we study and attempt to give a thorough comparison of a few
-competing algorithms using existing theory and empirical results. 
+multilayer neural network objective. We develop a deeper understanding of the
+most common objectives and architectures used in this setting. We apply this
+analysis to motivate the selection of optimization procedures we study and
+attempt to give a thorough comparison of a few competing algorithms using
+existing theory and empirical results. 
 
